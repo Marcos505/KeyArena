@@ -1,13 +1,59 @@
-{% include "KeyArenaApp/partials/head.html" %}
+<!doctype html>
+<html lang="pt-br">
+  {% include "KeyArenaApp/partials/head.html" %}
 
-<body>
+  <body>
+    <nav class="navbar bg-body-tertiary fixed-top" data-bs-theme="dark" style="background-color: #212529;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">KeyArena</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Perfil</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="http://127.0.0.1:8000/">Sair</a>
+                </li>
+              <!-- <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li> -->
+            </ul>
+            <form class="d-flex mt-3" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </nav>
     <main class="position-absolute top-50 start-50 translate-middle">
 
         <div class="row">
             <div class="col-sm-6 mb-3 mb-sm-0">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Criar chaveamento de torneio²</h5>
+                  <h5 class="card-title">Criar chaveamento de torneio?</h5>
                   <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, laborum qui nihil culpa aliquam, assumenda voluptates dicta laboriosam doloribus tenetur recusandae exercitationem at placeat similique accusamus corporis blanditiis aspernatur ipsum.</p>
                   <a href="#" class="btn btn-primary">Criar torneio</a>
                 </div>
