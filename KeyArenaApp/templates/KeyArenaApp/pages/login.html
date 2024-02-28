@@ -1,50 +1,12 @@
+{% load static%}
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    form {
-      max-width: 300px;
-      margin: 0 auto;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      display: block;
-      font-weight: bold;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 8px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    .form-group .btn-container {
-      text-align: center;
-    }
-    .form-group .btn-container button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      margin: 0 5px;
-      cursor: pointer;
-    }
-    .form-group .btn-container button:first-child {
-      background-color: #007bff;
-      color: #fff;
-    }
-    .form-group .btn-container button:last-child {
-      background-color: #ccc;
-      color: #fff;
-    }
-  </style>
+  <link rel="stylesheet" href="{%static 'KeyArenaApp/css/login.css'%}">
 </head>
 <body>
   <form action="/login" method="post">
