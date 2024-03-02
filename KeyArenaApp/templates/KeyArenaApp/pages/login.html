@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
     {% include "KeyArenaApp/partials/head.html" %}
-    <link rel="stylesheet" href="../../static/login.css">
+    <link rel="stylesheet" href="{% static "KeyArenaApp/css/login.css" %}">
   </head>
-  <body style="background-color: #212529;">
+  <body>
     <div id="container">
       <form class="position-absolute top-50 start-50 translate-middle">
 
