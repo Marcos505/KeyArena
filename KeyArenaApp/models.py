@@ -3,6 +3,18 @@ from django.core.validators import RegexValidator
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
+class User(models.Model):
+    first_name = models.CharField(max_length=50, null=False, blank=False, validators=[RegexValidator(
+                                    regex='^[A-Za-z]*$',
+                                    message='O nome deve conter apenas letras.',
+                                    code='invalid_name')])
+    last_name = models.CharField(max_length=50, null=False, blank=False, validators=[RegexValidator(
+                                    regex='^[A-Za-z]*$',
+                                    message='O nome deve conter apenas letras.',
+                                    code='invalid_name')])
+    email = models.EmailField(default='')
+    password = models.CharField(max_length=100, default='')
+    administrator = models.BooleanField(default=False)
 
 class Address(models.Model):
     municipality = models.CharField(max_length=50)
@@ -17,18 +29,7 @@ class Address(models.Model):
                                     regex='^[0-9]*$',
                                     message='A CEP deve conter apenas números.',
                                     code='invalid_cep')])
-
-class User(models.Model):
-    first_name = models.CharField(max_length=50, null=False, blank=False, validators=[RegexValidator(
-                                    regex='^[A-Za-z]*$',
-                                    message='O nome deve conter apenas letras.',
-                                    code='invalid_name')])
-    last_name = models.CharField(max_length=50, null=False, blank=False, validators=[RegexValidator(
-                                    regex='^[A-Za-z]*$',
-                                    message='O nome deve conter apenas letras.',
-                                    code='invalid_name')])
-    administrator = models.BooleanField(default=False)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
 
 class Format(models.Model):
     format_name = models.CharField(max_length=50, null=False, blank=False)
