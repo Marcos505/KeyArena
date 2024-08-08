@@ -24,29 +24,33 @@
           left: 0;
           z-index: -1;
         }
+        form{
+            background: #000000;
+        }
+        
       </style>
 </head>
 <body >
     <div class="bg-image"></div>
     <div id="container">
-        <form class="position-absolute bg-dark top-50 start-50 translate-middle border border-secondary border-2 m-2 p-5 rounded-3" action="{% url 'login' %}" method="POST">
+        <form class="position-absolute top-50 start-50 translate-middle border border-secondary border-2 m-2 p-5 rounded-3" action="{% url 'login' %}" method="POST">
             {% csrf_token %}    
             <div class="d-flex align-items-center">
-                <h3 class="text-light bg-dark m-1">Key Arena</h3>
+                <h3 class="text-light m-1">Key Arena</h3>
                 <i class="bi bi-key-fill custom-icon m-2"></i>
               </div>
     
             <div class="form-group">
-                <label for="exampleInputEmail1" class="text-light bg-dark">Email</label>
+                <label for="exampleInputEmail1" class="text-light ">Email</label>
                 <input type="text" class="form-control"  aria-describedby="emailHelp" placeholder="Enter email" name="email">
             </div>
             <div class="form-group">
-                <label for="exampleInputPassword1" class="text-light bg-dark">Senha</label>
+                <label for="exampleInputPassword1" class="text-light ">Senha</label>
                 <input type="password" class="form-control" placeholder="Password" name="senha">
             </div>
             <div class="form-group form-check">
                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label text-light bg-dark" for="exampleCheck1">Check me out</label>
+                <label class="form-check-label text-light " for="exampleCheck1">Check me out</label>
             </div>
             {% include 'error_login.html' %}
             <button type="submit" class="btn btn-success">Entrar</button>
