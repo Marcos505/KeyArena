@@ -140,6 +140,7 @@ ENV/
 env.bak/
 venv.bak/
 ka_env/
+ambiente_virtual/
 
 # Spyder project settings
 .spyderproject
