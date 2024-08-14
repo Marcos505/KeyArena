@@ -10,7 +10,6 @@ from .models import Usuarios
 def page_apresentation(request):
     return render(request, 'index.html')
 
-
 def cadastro(request):
     if request.method == "GET":
         return render(request, 'cadastro.html')
@@ -62,3 +61,6 @@ def login(request):
         else:
             messages.info(request, 'Email ou senha incorretos! Tente Novamente')
             return redirect('/login')
+        
+def home_page(request):
+    return render(request, 'page_home.html')
