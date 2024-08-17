@@ -64,3 +64,6 @@ def login(request):
         
 def home_page(request):
     return render(request, 'page_home.html')
+
+def torneio(request):
+    return render(request, 'criartorneio.html')
