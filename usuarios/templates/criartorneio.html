@@ -38,7 +38,12 @@
         </div>
         
     </nav>
-
+    
+    <label for="participants">Número de Participantes:</label>
+    <select id="participants" onchange="generateBracket()">
+        <option value="4">4 Participantes</option>
+        <option value="8">8 Participantes</option>
+    </select>
     <svg id="bracket" width="800" height="600"></svg>
     
 
@@ -71,49 +76,74 @@
         }
 
         function generateBracket() {
+            const numParticipants = parseInt(document.getElementById('participants').value);
             const svg = document.getElementById('bracket');
             svg.innerHTML = ''; // Limpa a bracket anterior
 
-            // Rodada 1
-            drawRect(svg, 10, 20, 100, 40, "#4CAF50");
-            drawRect(svg, 10, 100, 100, 40, "#4CAF50");
-            drawRect(svg, 10, 180, 100, 40, "#4CAF50");
-            drawRect(svg, 10, 260, 100, 40, "#4CAF50");
-            drawRect(svg, 10, 340, 100, 40, "#4CAF50");
-            drawRect(svg, 10, 420, 100, 40, "#4CAF50");
-            drawRect(svg, 10, 500, 100, 40, "#4CAF50");
-            drawRect(svg, 10, 580, 100, 40, "#4CAF50");
+            if (numParticipants === 4) {
+                // Rodada 1
+                drawRect(svg, 10, 20, 100, 40, "#4CAF50");
+                drawRect(svg, 10, 100, 100, 40, "#4CAF50");
+                drawRect(svg, 10, 180, 100, 40, "#4CAF50");
+                drawRect(svg, 10, 260, 100, 40, "#4CAF50");
 
-            // Rodada 2
-            drawRect(svg, 150, 60, 100, 40, "#FF9800");
-            drawRect(svg, 150, 220, 100, 40, "#FF9800");
-            drawRect(svg, 150, 380, 100, 40, "#FF9800");
-            drawRect(svg, 150, 540, 100, 40, "#FF9800");
+                // Rodada 2
+                drawRect(svg, 150, 60, 100, 40, "#FF9800");
+                drawRect(svg, 150, 220, 100, 40, "#FF9800");
 
-            // Rodada 3
-            drawRect(svg, 300, 140, 100, 40, "#2196F3");
-            drawRect(svg, 300, 460, 100, 40, "#2196F3");
+                // Final
+                drawRect(svg, 300, 140, 100, 40, "#2196F3");
 
-            // Final
-            drawRect(svg, 450, 300, 100, 40, "#9C27B0");
+                // Linhas conectando as rodadas
+                drawLine(svg, 110, 40, 150, 80, "black", 2);
+                drawLine(svg, 110, 120, 150, 80, "black", 2);
+                drawLine(svg, 110, 200, 150, 240, "black", 2);
+                drawLine(svg, 110, 280, 150, 240, "black", 2);
 
-            // Linhas conectando as rodadas
-            drawLine(svg, 110, 40, 150, 80, "black", 2);
-            drawLine(svg, 110, 120, 150, 80, "black", 2);
-            drawLine(svg, 110, 200, 150, 240, "black", 2);
-            drawLine(svg, 110, 280, 150, 240, "black", 2);
-            drawLine(svg, 110, 360, 150, 400, "black", 2);
-            drawLine(svg, 110, 440, 150, 400, "black", 2);
-            drawLine(svg, 110, 520, 150, 560, "black", 2);
-            drawLine(svg, 110, 600, 150, 560, "black", 2);
+                drawLine(svg, 250, 80, 300, 160, "black", 2);
+                drawLine(svg, 250, 240, 300, 160, "black", 2);
+            } else if (numParticipants === 8) {
+                // Rodada 1
+                drawRect(svg, 10, 20, 100, 40, "#4CAF50");
+                drawRect(svg, 10, 100, 100, 40, "#4CAF50");
+                drawRect(svg, 10, 180, 100, 40, "#4CAF50");
+                drawRect(svg, 10, 260, 100, 40, "#4CAF50");
+                drawRect(svg, 10, 340, 100, 40, "#4CAF50");
+                drawRect(svg, 10, 420, 100, 40, "#4CAF50");
+                drawRect(svg, 10, 500, 100, 40, "#4CAF50");
+                drawRect(svg, 10, 580, 100, 40, "#4CAF50");
 
-            drawLine(svg, 250, 80, 300, 160, "black", 2);
-            drawLine(svg, 250, 240, 300, 160, "black", 2);
-            drawLine(svg, 250, 400, 300, 480, "black", 2);
-            drawLine(svg, 250, 560, 300, 480, "black", 2);
+                // Rodada 2
+                drawRect(svg, 150, 60, 100, 40, "#FF9800");
+                drawRect(svg, 150, 220, 100, 40, "#FF9800");
+                drawRect(svg, 150, 380, 100, 40, "#FF9800");
+                drawRect(svg, 150, 540, 100, 40, "#FF9800");
 
-            drawLine(svg, 400, 160, 450, 320, "black", 2);
-            drawLine(svg, 400, 480, 450, 320, "black", 2);
+                // Rodada 3
+                drawRect(svg, 300, 140, 100, 40, "#2196F3");
+                drawRect(svg, 300, 460, 100, 40, "#2196F3");
+
+                // Final
+                drawRect(svg, 450, 300, 100, 40, "#9C27B0");
+
+                // Linhas conectando as rodadas
+                drawLine(svg, 110, 40, 150, 80, "black", 2);
+                drawLine(svg, 110, 120, 150, 80, "black", 2);
+                drawLine(svg, 110, 200, 150, 240, "black", 2);
+                drawLine(svg, 110, 280, 150, 240, "black", 2);
+                drawLine(svg, 110, 360, 150, 400, "black", 2);
+                drawLine(svg, 110, 440, 150, 400, "black", 2);
+                drawLine(svg, 110, 520, 150, 560, "black", 2);
+                drawLine(svg, 110, 600, 150, 560, "black", 2);
+
+                drawLine(svg, 250, 80, 300, 160, "black", 2);
+                drawLine(svg, 250, 240, 300, 160, "black", 2);
+                drawLine(svg, 250, 400, 300, 480, "black", 2);
+                drawLine(svg, 250, 560, 300, 480, "black", 2);
+
+                drawLine(svg, 400, 160, 450, 320, "black", 2);
+                drawLine(svg, 400, 480, 450, 320, "black", 2);
+            }
         }
 
         // Gera a bracket ao carregar a página
