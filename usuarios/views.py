@@ -67,3 +67,6 @@ def home_page(request):
 
 def torneio(request):
     return render(request, 'criartorneio.html')
+
+def torneio2(request):
+    return render(request, 'criartorneio2.html')

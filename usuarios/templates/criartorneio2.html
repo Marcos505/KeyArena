@@ -56,20 +56,35 @@
             height: 100px;
         }
         button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background-color: #007BFF; /* Cor verde para destaque */
+        color: white;
+        border: none;
+        border-radius: 6px; /* Borda arredondada */
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease; /* Transição suave */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+    }
+
+    button:hover {
+        background-color: #0056b3; /* Mudança de cor ao passar o mouse */
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Aumento da sombra */
+        transform: translateY(-2px); /* Efeito de elevação */
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .button-group button {
+        width: calc(50% - 5px); /* Tamanho igual para os botões */
+    }
+        
         .navbar-brand i {
             margin-right: 10px;
         }
@@ -104,34 +119,25 @@
         <h1>Crie seu torneio</h1>
         <form>
             <div class="form-group">
-                <label for="tournament-name">Nome do torneio</label>
-                <input type="text" id="tournament-name" name="tournament-name" placeholder="Informe o nome do torneio">
+                <label for="start-date">Data de início do torneio</label>
+                <input type="date" id="start-date" name="start-date">
             </div>
             <div class="form-group">
-                <label for="tournament-creator">Criador do torneio</label>
-                <input type="text" id="tournament-creator" name="tournament-creator" placeholder="Informe o nome do criador">
+                <label for="end-date">Data de fim do torneio</label>
+                <input type="date" id="end-date" name="end-date">
             </div>
             <div class="form-group">
-                <label for="modality">Modalidade</label>
-                <select id="modality" name="modality">
-                    <option value="futebol">Futebol</option>
-                    <option value="basquete">Basquete</option>
-                    <option value="volei">Vôlei</option>
-                </select>
+                <label for="registration-start">Data de início de inscrição</label>
+                <input type="date" id="registration-start" name="registration-start">
             </div>
             <div class="form-group">
-                <label for="participants">Quantidade máx. de Participantes</label>
-                <select id="participants" name="participants">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                </select>
+                <label for="registration-end">Data de fim de inscrição</label>
+                <input type="date" id="registration-end" name="registration-end">
             </div>
-            <div class="form-group">
-                <label for="description">Descrição</label>
-                <textarea id="description" name="description" placeholder="Descrição do torneio"></textarea>
+            <div class="button-group">
+                <button type="button" onclick="history.back()">Voltar</button>
+                <button type="submit">Concluir</button>
             </div>
-            <button type="submit">Próximo</button>
         </form>
     </div>
 
