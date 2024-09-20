@@ -1,0 +1,27 @@
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <i class="bi bi-key-fill m-2"></i>
+      KeyArena
+    </a>
+    <div class="dropdown">
+      <div
+        class="avatar"
+        id="avatarDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        {% comment %} <img src="{% static '03.png' %}" alt="Avatar" /> {% endcomment %}
+      </div>
+      <ul
+        class="dropdown-menu dropdown-menu-end"
+        aria-labelledby="avatarDropdown"
+      >
+        <li><a class="dropdown-item" href="#">Profile</a></li>
+        <li><a class="dropdown-item" href="#">Settings</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="#">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
