@@ -8,47 +8,48 @@
 <body >
     <div class="bg-image"></div>
     <!--<form  class="position-absolute bg-dark top-50 start-50 translate-middle border border-secondary border-2 m-2 p-5 rounded-3 " action="{% url 'cadastro' %}" method="POST">-->
-    <main class="position-absolute top-50 start-50 translate-middle">
+<main class="position-absolute top-50 start-50 translate-middle">
     <div class="container">  
         <div class="form-box">
-        <form action="{% url 'cadastro' %}" method="POST"></form>
-        {% csrf_token %}
-        <h2 class="text-light ">Cadastro de Usuário</h2>
-        <div class="form-group">
-            <label for="email" class="text-light " >Endereço de email</label>
-            <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Email..." name="email">
-        </div>
-        <br>
-        <div class="form-group">
-            <label for="senha" class="text-light " >Senha</label>
-            <input type="password" class="form-control" placeholder="Senha..." name="senha">
-        </div>
-        <br>
-        <div class="form-group">
-            <label for="name" class="text-light " >Nome</label>
-            <input type="text" class="form-control" name="nome">
-        </div>
-        <br>
-        <div class="form-group">
-            <label for="sobrenome" class="text-light ">Sobrenome</label>
-            <input type="text" class="form-control" name="sobrenome">
-        </div>
-        <br>
-        <div class="form-group">
-            <label for="data-nascimento" class="text-light ">Data de nascimento</label>
-            <input type="date" class="form-control" name="data_nascimento">
-        </div>
-        <br>
-        <div class="form-group">
-            <label for="celular" class="text-light ">Celular</label>
-            <input type="text" class="form-control" name="celular">
-        </div>
-        <br>
-        <button type="submit" class="btn btn-primary" >Cadastrar</button>
-        <button type="button" class="btn btn-danger"  onclick="window.history.back()">Cancelar</button>
-    </form>
-</div> 
-    </main>
+            <form action="{% url 'cadastro' %}" method="POST"></form>
+            {% csrf_token %}
+            <h2 class="text-light ">Cadastro de Usuário</h2>
+            <div class="form-group">
+                <label for="email" class="text-light " >Endereço de email</label>
+                <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Email..." name="email">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="senha" class="text-light " >Senha</label>
+                <input type="password" class="form-control" placeholder="Senha..." name="senha">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="name" class="text-light " >Nome</label>
+                <input type="text" class="form-control" name="nome">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="sobrenome" class="text-light ">Sobrenome</label>
+                <input type="text" class="form-control" name="sobrenome">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="data-nascimento" class="text-light ">Data de nascimento</label>
+                <input type="date" class="form-control" name="data_nascimento">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="celular" class="text-light ">Celular</label>
+                <input type="text" class="form-control" name="celular">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary" >Cadastrar</button>
+            <button type="button" class="btn btn-danger"  onclick="window.history.back()">Cancelar</button>
+            </form>
+        </div> 
+    </div> 
+</main>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
