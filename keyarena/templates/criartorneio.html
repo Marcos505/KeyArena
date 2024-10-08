@@ -9,7 +9,8 @@
     {% include 'components/navbar.html' %}
     <div class="form-container">
       <h1>Crie seu torneio</h1>
-      <form>
+      <form method="POST" action="{% url 'salvar_torneio1' %}">
+        {% csrf_token %}
         <div class="form-group">
           <label for="tournament-name">Nome do torneio</label>
           <input
@@ -17,14 +18,15 @@
             id="tournament-name"
             name="tournament-name"
             placeholder="Informe o nome do torneio"
-          />
+            required 
+            />
         </div>
 
         <div class="form-group">
           <label for="modality">Modalidade</label>
           <select id="modality" name="modality">
             {% for modality in modalidades %}
-            <option value="{{ modality.ttor_tipo }}">{{ modality.ttor_tipo }}</option>
+            <option value="{{ modality.ttor_id }}">{{ modality.ttor_tipo }}</option>
             {% endfor %}
           </select>
         </div>
@@ -39,6 +41,7 @@
             min="1"
             max="10000"
             style="width: 100%"
+            required
           />
         </div>
 
@@ -56,13 +59,6 @@
 
     {% include 'components/footer.html' %}
     <script>
-      function handleSubmit(event) {
-        event.preventDefault() // Impede o comportamento padrão de submissão
-
-        // Aqui você pode fazer uma validação ou outra lógica
-
-        window.location.href = "/criar1" // Redireciona para a próxima página
-      }
     </script>
 
     <script

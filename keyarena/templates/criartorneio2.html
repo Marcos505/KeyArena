@@ -8,10 +8,16 @@
     {% include 'components/navbar.html' %}
     <div class="form-container">
       <h1>Crie seu torneio</h1>
-      <form>
+      <form method="POST" action="{% url 'salvar_torneio2' %}">
+        {% csrf_token %}
         <div class="form-group">
           <label for="start-date">Data de início do torneio</label>
-          <input type="date" id="start-date" name="start-date" />
+          <input 
+            type="date" 
+            id="start-date" 
+            name="start-date" 
+            required
+          />
         </div>
         <div class="form-group">
           <label for="registration-start">Data de início de inscrição</label>
@@ -19,11 +25,17 @@
             type="date"
             id="registration-start"
             name="registration-start"
+            required
           />
         </div>
         <div class="form-group">
           <label for="registration-end">Data de fim de inscrição</label>
-          <input type="date" id="registration-end" name="registration-end" />
+          <input 
+            type="date" 
+            id="registration-end" 
+            name="registration-end"
+            required
+          />
         </div>
         <div class="button-group">
           <a href="criartorneio.html">

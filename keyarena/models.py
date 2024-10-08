@@ -28,11 +28,15 @@ class Torneio(models.Model):
     tor_nome_torneio = models.CharField(max_length=255)
     tor_quant_participantes = models.IntegerField()
     tor_ativo = models.BooleanField(default=True)
-    tor_modalidade = models.CharField(max_length=50)
     tor_data_criacao = models.DateField(auto_now_add=True)
     tor_descricao = models.CharField(max_length=255)
-    tor_usu_criador = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    # tor_usu_criador = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     tor_tipo_torneio = models.ForeignKey(TiposTorneio, on_delete=models.CASCADE)
+
+    tor_data_inicio = models.DateField(null=True, blank=True)  
+    tor_data_inicio_inscricao = models.DateField(null=True, blank=True)  
+    tor_data_fim_inscricao = models.DateField(null=True, blank=True)  
+
 
     def _str_(self):
         return self.tor_nome_torneio
