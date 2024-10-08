@@ -9,7 +9,7 @@
     {% include 'components/navbar.html' %}
     <div class="form-container">
       <h1>Crie seu torneio</h1>
-      <form onsubmit="handleSubmit(event)">
+      <form>
         <div class="form-group">
           <label for="tournament-name">Nome do torneio</label>
           <input
@@ -23,10 +23,9 @@
         <div class="form-group">
           <label for="modality">Modalidade</label>
           <select id="modality" name="modality">
-            <option value="Single Elimination">Single Elimination</option>
-            <option value="Double Elimination">Double Elimination</option>
-            <option value="Swiss">Swiss</option>
-            <option value="RoundRobin">Round Robin</option>
+            {% for modality in modalidades %}
+            <option value="{{ modality.ttor_tipo }}">{{ modality.ttor_tipo }}</option>
+            {% endfor %}
           </select>
         </div>
 
