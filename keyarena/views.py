@@ -16,3 +16,9 @@ def torneio(request):
 
 def torneio2(request):
     return render(request, 'criartorneio2.html')
+
+def entrartorneio(request):
+    return render(request, 'torneios.html')
+
+def profile(request):
+    return render(request, 'perfil.html')
