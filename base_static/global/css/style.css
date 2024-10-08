@@ -73,3 +73,36 @@ form {
 .card-body {
   height: 100%;
 }
+
+.container1 {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.table-container {
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 60%;
+  position: relative;
+}
+
+.description-box {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tournament-row:hover ~ #description-box {
+  display: block;
+}

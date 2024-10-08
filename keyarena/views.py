@@ -19,6 +19,7 @@ def torneio(request):
 def torneio2(request):
     return render(request, 'criartorneio2.html')
 
+
 def modalidade_dinamica(request):
     modalidades = TiposTorneio.objects.all()
     return render(request, 'criartorneio.html', {'modalidades': modalidades})
@@ -80,3 +81,10 @@ def salvar_torneio2(request):
 
     # Renderizar o formulário da segunda etapa
     return render(request, 'criartorneio2.html')
+
+def entrartorneio(request):
+    return render(request, 'torneios.html')
+
+def profile(request):
+    return render(request, 'perfil.html')
+  
