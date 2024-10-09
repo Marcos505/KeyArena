@@ -11,7 +11,7 @@ class Usuario(models.Model):
     usu_senha = models.CharField(max_length=255)
     usu_tipo_usuario = models.CharField(max_length=20)
 
-    def _str_(self):
+    def __str__(self):
         return self.usu_nome_completo
 
 # Tabela: tipos_torneio
@@ -38,7 +38,7 @@ class Torneio(models.Model):
     tor_data_fim_inscricao = models.DateField(null=True, blank=True)  
 
 
-    def _str_(self):
+    def __str__(self):
         return self.tor_nome_torneio
 
 # Tabela: torneio_rodadas
@@ -47,7 +47,7 @@ class TorneioRodada(models.Model):
     rod_tor_torneio = models.ForeignKey(Torneio, on_delete=models.CASCADE)
     rod_rodada = models.IntegerField()
 
-    def _str_(self):
+    def __str__(self):
         return f"Torneio {self.rod_tor_torneio} - Rodada {self.rod_rodada}"
 
 # Tabela: inscricao_torneio
@@ -56,7 +56,7 @@ class InscricaoTorneio(models.Model):
     ins_tor_torneios = models.ForeignKey(Torneio, on_delete=models.CASCADE)
     ins_usu_participante = models.ForeignKey(Usuario, on_delete=models.CASCADE)
 
-    def _str_(self):
+    def __str__(self):
         return f"Inscrição de {self.ins_usu_participante} no Torneio {self.ins_tor_torneios}"
 
 # Tabela: partidas_rodada
@@ -67,7 +67,7 @@ class PartidaRodada(models.Model):
     par_usu_participante_dois = models.ForeignKey(Usuario, related_name='partida_participante_dois', on_delete=models.CASCADE)
     par_resultado = models.BooleanField()
 
-    def _str_(self):
+    def __str__(self):
         return f"Partida entre {self.par_usu_participante_um} e {self.par_usu_participante_dois}"
 
 # Tabela: resultados
@@ -77,5 +77,5 @@ class Resultado(models.Model):
     res_usu_participante = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     res_resultado = models.IntegerField()
 
-    def _str_(self):
+    def __str__(self):
         return f"Resultado de {self.res_usu_participante} no Torneio {self.res_tor_torneio}: {self.res_resultado}"

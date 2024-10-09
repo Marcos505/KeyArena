@@ -83,7 +83,9 @@ def salvar_torneio2(request):
     return render(request, 'criartorneio2.html')
 
 def entrartorneio(request):
-    return render(request, 'torneios.html')
+    torneios = Torneio.objects.all()
+
+    return render(request, 'torneios.html', {'torneios': torneios})
 
 def profile(request):
     return render(request, 'perfil.html')
