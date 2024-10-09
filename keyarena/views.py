@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import TiposTorneio
+from .models import InscricaoTorneio, TiposTorneio
 from keyarena.models import Torneio
 
 def index(request):
@@ -84,8 +84,10 @@ def salvar_torneio2(request):
 
 def entrartorneio(request):
     torneios = Torneio.objects.all()
+    inscricoes = InscricaoTorneio.objects.select_related('ins_tor_torneios').all()
 
-    return render(request, 'torneios.html', {'torneios': torneios})
+    return render(request, 'torneios.html', {'torneios': torneios, 'inscricoes': inscricoes})
+
 
 def profile(request):
     return render(request, 'perfil.html')

@@ -53,11 +53,12 @@ class TorneioRodada(models.Model):
 # Tabela: inscricao_torneio
 class InscricaoTorneio(models.Model):
     ins_id = models.AutoField(primary_key=True)
-    ins_tor_torneios = models.ForeignKey(Torneio, on_delete=models.CASCADE)
-    ins_usu_participante = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    ins_tor_torneios = models.ForeignKey('Torneio', on_delete=models.CASCADE)
+    # ins_usu_participante = models.ForeignKey('Usuario', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Inscrição de {self.ins_usu_participante} no Torneio {self.ins_tor_torneios}"
+        return f"Inscrição no Torneio {self.ins_tor_torneios}"
+        #return f"Inscrição de {self.ins_usu_participante} no Torneio {self.ins_tor_torneios}"
 
 # Tabela: partidas_rodada
 class PartidaRodada(models.Model):
