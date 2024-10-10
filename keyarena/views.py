@@ -13,18 +13,11 @@ def cadastro(request):
 def home_page(request):
     return render(request, 'page_home.html')
 
-def torneio(request):
-    return render(request, 'criartorneio.html')
-
-def torneio2(request):
-    return render(request, 'criartorneio2.html')
-
-
-def modalidade_dinamica(request):
-    modalidades = TiposTorneio.objects.all()
-    return render(request, 'criartorneio.html', {'modalidades': modalidades})
+# def torneio2(request):
+#     return render(request, 'criartorneio2.html')
 
 def salvar_torneio1(request):
+    modalidades = TiposTorneio.objects.all()
     if request.method == 'POST':
         nome_torneio = request.POST.get('tournament-name')
         modalidade_id = request.POST.get('modality')
@@ -40,7 +33,7 @@ def salvar_torneio1(request):
 
         return redirect(salvar_torneio2)
 
-    return render(request, 'criartorneio.html')
+    return render(request, 'criartorneio.html', {'modalidades': modalidades})
 
 
 def salvar_torneio2(request):
@@ -88,7 +81,11 @@ def entrartorneio(request):
 
     return render(request, 'torneios.html', {'torneios': torneios, 'inscricoes': inscricoes})
 
-
 def profile(request):
     return render(request, 'perfil.html')
+
+def participar(request):
+    torneios = Torneio.objects.all()
+
+    return render(request, 'participar.html', {'torneios': torneios})
   
