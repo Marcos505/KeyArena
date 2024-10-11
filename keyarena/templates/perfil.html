@@ -58,8 +58,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal para editar perfil -->
         <div class="modal fade" id="editarperfil" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -68,8 +66,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST" action="{% url 'perfil' %}">
+                        <form method="POST" enctype="multipart/form-data" action="{% url 'perfil' %}">
                             {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="foto_perfil" class="form-label">Foto de Perfil</label>
+                                <input type="file" class="form-control" id="foto_perfil" name="foto_perfil">
+                            </div>
                             <div class="mb-3">
                                 <label for="nome" class="form-label">Nome Completo</label>
                                 <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.usu_nome_completo }}" placeholder="Insira seu nome" required>

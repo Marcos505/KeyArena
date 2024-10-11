@@ -128,6 +128,11 @@ def perfil(request):
         usuario.usu_email = request.POST.get('email')
         usuario.usu_nickname = request.POST.get('nickname')
         usuario.usu_telefone = request.POST.get('telefone')
+        
+
+        if request.FILES.get('foto_perfil'):
+            usuario.foto_perfil = request.FILES['foto_perfil']
+            
         usuario.save()
         return redirect('perfil')
     
