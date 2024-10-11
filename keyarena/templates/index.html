@@ -8,9 +8,16 @@
   <body>
     <div class="bg-image"></div>
     <div id="container">
+      {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
       <form
         class="position-absolute top-50 start-50 translate-middle border border-secondary border-2 m-2 p-5 rounded-3"
-        action="#"
+        action=""
         method="POST"
       >
         {% csrf_token %}
@@ -26,7 +33,7 @@
             class="form-control"
             aria-describedby="emailHelp"
             placeholder="Enter email"
-            name="email"
+            name="username"
           />
         </div>
         <div class="form-group">
@@ -35,7 +42,7 @@
             type="password"
             class="form-control"
             placeholder="Password"
-            name="senha"
+            name="password"
           />
         </div>
         <div class="form-group form-check">
@@ -45,17 +52,14 @@
           >
         </div>
         <button
-          type="button"
-          class="btn btn-success"
-          onclick="location.href='/home_page'"
-        >
+          type="submit"
+          class="btn btn-success">
           Entrar
         </button>
         <button
           type="button"
           class="btn btn-primary"
-          onclick="location.href='/cadastro'"
-        >
+          onclick="location.href='/cadastro'">
           Cadastre-se
         </button>
       </form>
