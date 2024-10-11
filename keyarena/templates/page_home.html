@@ -11,39 +11,15 @@
 
     <main class="position-absolute top-50 start-50 translate-middle">
       <div class="row">
-        <div class="col-sm-4 mb-3 mb-sm-0">
-          <div class="card h-100">
-            <div class="card-body d-flex flex-column justify-content-between text-center">
-              <div>
-                <h5 class="card-title">Criar chaveamento de torneio?</h5>
-                <p class="card-text">Crie e gerencie seu próprio torneio</p>
-              </div>
-              <a onclick="location.href='/criar'" class="btn btn-primary mt-auto">Criar torneio</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4 mb-3 mb-sm-0">
-          <div class="card h-100">
-            <div class="card-body d-flex flex-column justify-content-between text-center">
-              <div>
-                <h5 class="card-title">Participar de um torneio?</h5>
-                <p class="card-text">Entre em um torneio já existente</p>
-              </div>
-              <a onclick="location.href='/participar'" class="btn btn-primary mt-auto">Participar de torneio</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="card h-100">
-            <div class="card-body d-flex flex-column justify-content-between text-center">
-              <div>
-                <h5 class="card-title">Meus Torneios</h5>
-                <p class="card-text">Veja os torneios criados por você ou suas inscrições</p>
-              </div>
-              <a onclick="location.href='/torneios'" class="btn btn-primary mt-auto">Meus Torneios</a>
-            </div>
-          </div>
-        </div>
+      {% include 'components/button_home_page.html' with title='Cria Chaveamento de torneio?' text='Crie e genrencie seu próprio torneio' btn_text='Criar Torneio' url='/criar/' %}
+
+      
+      {% include 'components/button_home_page.html' with title='Participar de um torneio?' text='Participar de um torneio?' btn_text='Participar de torneio' url='/participar/' %}
+      
+      
+      {% include 'components/button_home_page.html' with title='Meus Torneios' text='Veja os torneios criados por você ou suas inscrições' btn_text='Meus Torneios' url='/torneios/' %}
+      
+
       </div>
     </main>
 

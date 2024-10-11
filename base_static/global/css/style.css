@@ -150,3 +150,6 @@ form {
   font-size: 1rem;
 }
 
+.btn-hover:hover{
+  background-color: #212529;
+}
