@@ -50,10 +50,6 @@
   z-index: -1;
 }
 
-form {
-  background: #000000;
-}
-
 /* Página de cadastro */
 
 .container {
@@ -68,7 +64,7 @@ form {
 .form-box h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: #fff;
 }
 
 .card-body {
@@ -152,4 +148,8 @@ form {
 
 .btn-hover:hover{
   background-color: #212529;
+}
+
+.form-login{
+  background-color:rgb(0, 0, 0)
 }
