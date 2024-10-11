@@ -18,11 +18,24 @@
                             <h2>Perfil do Usuário</h2>
                         </div>
                         <div class="card-body text-center">
-                            <h4 class="card-title">Nome do Usuário</h4>
-                            <p class="card-text">email@exemplo.com</p>
-                            <p class="card-text">Participante desde: Janeiro 2024</p>
+                            <h4 class="card-title">Nome: {{ usuario.usu_nome_completo }}</h4>
+                            <p class="card-text">Data de nascimento: {{ usuario.usu_data_nascimento }}</p>
+                            <p class="card-text">Email: {{ usuario.usu_email }}</p>
+                            <p class="card-text">
+                                Nickname: 
+                                {% if usuario.usu_nickname is None %}
+                                    ---Adicione---
+                                {% else %}
+                                    {{ usuario.usu_nickname }}
+                                {% endif %}
+                            </p>
+                            <p class="card-text">Telefone: {{ usuario.usu_telefone }}</p>
+                            <p class="card-text">
+                                Participante desde: {{ usuario.date_joined|date:"F" }} de {{ usuario.date_joined|date:"Y" }}
+                            </p>
                             <button class="btn btn-primary mt-3">Editar Perfil</button>
-                        </div>
+                        </div>                        
+                        
                     </div>
                 </div>
                 <div class="col-md-4">
