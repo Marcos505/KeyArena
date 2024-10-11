@@ -121,6 +121,16 @@ def entrartorneio(request):
 @login_required
 def perfil(request):
     usuario = request.user
+    if request.method == 'POST':
+        usuario = request.user
+        usuario.usu_nome_completo = request.POST.get('nome')
+        usuario.usu_data_nascimento = request.POST.get('data_nascimento')
+        usuario.usu_email = request.POST.get('email')
+        usuario.usu_nickname = request.POST.get('nickname')
+        usuario.usu_telefone = request.POST.get('telefone')
+        usuario.save()
+        return redirect('perfil')
+    
     return render(request, 'perfil.html', {'usuario': usuario})
 
 def participar(request):
@@ -133,17 +143,3 @@ def sair(request):
     logout(request)
     return redirect('index')
 
-
-@login_required
-def editar_perfil(request):
-    if request.method == 'POST':
-        usuario = request.user
-        usuario.usu_nome_completo = request.POST.get('nome')
-        usuario.usu_data_nascimento = request.POST.get('data_nascimento')
-        usuario.usu_email = request.POST.get('email')
-        usuario.usu_nickname = request.POST.get('nickname')
-        usuario.usu_telefone = request.POST.get('telefone')
-        usuario.save()
-        return redirect('perfil') 
-
-    return redirect('perfil') 

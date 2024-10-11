@@ -8,7 +8,6 @@ urlpatterns = [
     path('torneios/', views.entrartorneio, name='torneios'),
     
     path('perfil/', views.perfil, name='perfil'),
-    path('perfil/', views.editar_perfil, name='editar_perfil'),
 
     path('participar/', views.participar, name='participar'),
     path('criar/', views.salvar_torneio1, name='salvar_torneio1'),

@@ -23,14 +23,14 @@
                         </div>
                         <div class="card-body text-center">
                             <h4 class="card-title">Nome: {{ usuario.usu_nome_completo }}</h4>
-                            <p class="card-text">Data de nascimento: {{ usuario.usu_data_nascimento }}</p>
+                            <p class="card-text">Data de nascimento: {{ usuario.usu_data_nascimento|default:"Não disponível" }}</p>
                             <p class="card-text">Email: {{ usuario.usu_email }}</p>
                             <p class="card-text">
                                 Nickname: 
-                                {% if usuario.usu_nickname is None %}
-                                    ---Adicione---
-                                {% else %}
+                                {% if usuario.usu_nickname %}
                                     {{ usuario.usu_nickname }}
+                                {% else %}
+                                    ---Adicione---
                                 {% endif %}
                             </p>
                             <p class="card-text">Telefone: {{ usuario.usu_telefone }}</p>
@@ -68,11 +68,11 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST" action="{% url 'editar_perfil' %}">
+                        <form method="POST" action="{% url 'perfil' %}">
                             {% csrf_token %}
                             <div class="mb-3">
                                 <label for="nome" class="form-label">Nome Completo</label>
-                                <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.usu_nome_completo }}" required>
+                                <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.usu_nome_completo }}" placeholder="Insira seu nome" required>
                             </div>
                             <div class="mb-3">
                                 <label for="data_nascimento" class="form-label">Data de Nascimento</label>
@@ -80,15 +80,15 @@
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" value="{{ usuario.usu_email }}" required>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ usuario.usu_email }}" placeholder="Insira seu e-mail" required>
                             </div>
                             <div class="mb-3">
                                 <label for="nickname" class="form-label">Nickname</label>
-                                <input type="text" class="form-control" id="nickname" name="nickname" value="{{ usuario.usu_nickname }}">
+                                <input type="text" class="form-control" id="nickname" name="nickname" value="{{ usuario.usu_nickname }}" placeholder="Insira seu nickname">
                             </div>
                             <div class="mb-3">
                                 <label for="telefone" class="form-label">Telefone</label>
-                                <input type="text" class="form-control" id="telefone" name="telefone" value="{{ usuario.usu_telefone }}">
+                                <input type="text" class="form-control" id="telefone" name="telefone" value="{{ usuario.usu_telefone }}" placeholder="Insira seu telefone">
                             </div>
                             <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                         </form>
@@ -97,7 +97,6 @@
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>
