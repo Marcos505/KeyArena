@@ -15,7 +15,8 @@ urlpatterns = [
     path('criar/', views.salvar_torneio1, name='salvar_torneio1'),
     path('criar/etapa2/', views.salvar_torneio2, name='salvar_torneio2'),
 
-    path('sair/', views.sair, name='sair')
+    path('sair/', views.sair, name='sair'),
+    path('inscricao/<int:torneio_id>/', views.inscricao, name='inscricao'),
 ]
 
 if settings.DEBUG:

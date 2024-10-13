@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    {% load static %}
+    {% include 'components/head.html' with title='KeyArena' %}>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo de Barra Lateral</title>
+</head>
+
+<body>
+    {% include 'components/navbar.html' %}
+    <div class="container1">
+        <div class="content" id="content">
+            <h1>{{ torneio.tor_nome_torneio }}!</h1>
+            {% if mensagem %}
+                <h2> Você já está inscrito neste torneio!</h2>
+            {% else %}
+                <h2> Você se inscreveu neste torneio!</h2>
+            {% endif %}
+            <h2>Aqui vai aparecer o chaveamento</h2>
+        </div>
+</body>
+{% include 'components/footer.html' %}
+<script
+      src="https://kit.fontawesome.com/eb67357ef4.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+</html>

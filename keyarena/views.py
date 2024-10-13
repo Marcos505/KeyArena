@@ -45,7 +45,8 @@ def cadastro(request):
     return render(request, 'cadastro.html')
 
 def home_page(request):
-    return render(request, 'page_home.html')
+    usuario = request.user
+    return render(request, 'page_home.html', {'usuario': usuario})
 
 def salvar_torneio1(request):
     modalidades = TiposTorneio.objects.all()
@@ -109,12 +110,12 @@ def salvar_torneio2(request):
 
 @login_required
 def entrartorneio(request):
-    usuario_da_sessao = request.user
+    usuario = request.user
 
     torneios = Torneio.objects.all()
-    torneios = Torneio.objects.filter(tor_usu_criador=usuario_da_sessao)
+    torneios = Torneio.objects.filter(tor_usu_criador=usuario)
 
-    inscricoes = InscricaoTorneio.objects.filter(ins_usu_participante=usuario_da_sessao)
+    inscricoes = InscricaoTorneio.objects.filter(ins_usu_participante=usuario)
 
     return render(request, 'torneios.html', {'torneios': torneios, 'inscricoes': inscricoes})
 
@@ -122,7 +123,6 @@ def entrartorneio(request):
 def perfil(request):
     usuario = request.user
     if request.method == 'POST':
-        usuario = request.user
         usuario.usu_nome_completo = request.POST.get('nome')
         usuario.usu_data_nascimento = request.POST.get('data_nascimento')
         usuario.usu_email = request.POST.get('email')
@@ -140,7 +140,7 @@ def perfil(request):
 
 def participar(request):
     usuario_da_sessao_id = request.user.id 
-    torneios = Torneio.objects.exclude(tor_usu_criador_id=usuario_da_sessao_id)  # Exclui os torneios criados pelo usuário logado
+    torneios = Torneio.objects.exclude(tor_usu_criador_id=usuario_da_sessao_id)  
 
     return render(request, 'participar.html', {'torneios': torneios})
 
@@ -148,3 +148,27 @@ def sair(request):
     logout(request)
     return redirect('index')
 
+def inscricao(request, torneio_id):
+    torneio = Torneio.objects.get(tor_id=torneio_id)
+
+    if request.method == 'POST':
+        inscricao_existente = InscricaoTorneio.objects.filter(
+            ins_usu_participante=request.user,
+            ins_tor_torneios=torneio
+        ).first()
+
+        if inscricao_existente:
+            
+            return render(request, 'inscricao.html', {
+                'torneio': torneio,
+                'mensagem': 'Você já está inscrito neste torneio.'
+            })
+
+        inscricao = InscricaoTorneio()
+        inscricao.ins_tor_torneios = torneio
+        inscricao.ins_usu_participante = request.user 
+        inscricao.save() 
+
+        return render(request, 'inscricao.html', {'torneio': torneio})
+
+    return render(request, 'inscricao.html', {'torneio': torneio})
