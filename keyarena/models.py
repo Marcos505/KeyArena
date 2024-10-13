@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+import pyotp
 
 class UsuarioManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -29,6 +30,9 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     foto_perfil = models.ImageField(upload_to='fotos_perfil/', null=True, blank=True)
 
+    first_login = models.BooleanField(default=True)
+    key_auth = models.CharField(max_length=32, blank=True, null=True)
+
     objects = UsuarioManager()
 
     USERNAME_FIELD = 'usu_email'  # Usa o email como identificador
@@ -40,6 +44,12 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     @property
     def id(self):
         return self.usu_id
+    
+    def generate_2fa_token(self):
+        if not self.key_auth:
+            self.key_auth = pyotp.random_base32()
+            self.save()
+        return self.key_auth
 
 # Tabela: tipos_torneio
 class TiposTorneio(models.Model):

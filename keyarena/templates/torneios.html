@@ -24,7 +24,7 @@
                         <th>Participantes</th>
                         <th>Status</th>
                         <th>Data de Inicio</th>
-                        <th>Ações</th>
+
                     </tr>
                 </thead>
                 <tbody id="tournamentTable">
@@ -47,14 +47,14 @@
                             </button>
                         </td>
                         <td>
-                            <button class="btn btn-info">Ver Chaveamento</button>
+                            <button class="btn btn-info">Chaveamento</button>
                         </td>
                     </tr>
                     <div class="modal fade" id="descriptionModal{{ torneio.tor_id }}" tabindex="-1" aria-labelledby="descriptionModal{{ torneio.tor_id }}Label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="descriptionModal{{ torneio.tor_id }}Label">Descrição do {{ torneio.tor_nome_torneio }}</h5>
+                                    <h5 class="modal-title" id="descriptionModal{{ torneio.tor_id }}Label">Desistir do {{ torneio.tor_nome_torneio }}?</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -73,15 +73,16 @@
             <table class="table table-striped d-none" id="table2">
                 <thead>
                     <tr>
-                        <th>ID da Inscrição</th>
+                        <!-- <th>ID da Inscrição</th> -->
                         <th>Nome do Torneio</th>
                         <th>Status</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for inscricao in inscricoes %}
                     <tr>
-                        <td>{{ inscricao.ins_id }}</td>
+                        <!-- <td>{{ inscricao.ins_id }}</td> -->
                         <td>{{ inscricao.ins_tor_torneios.tor_nome_torneio }}</td>
                         <td>
                             {% if inscricao.ins_tor_torneios.tor_ativo %}
@@ -90,7 +91,37 @@
                                 Finalizado
                             {% endif %}
                         </td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}">
+                                Desistir do Torneio
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}">
+                                Chaveamento
+                            </button>
+                        </td>
                     </tr>
+                    <div class="modal fade" id="descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}" tabindex="-1" aria-labelledby="descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}Label">Desistir do {{ inscricao.ins_tor_torneios.tor_nome_torneio }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Aviso: Tem certeza que quer desistir?<br>
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="{% url 'cancelar_inscricao' inscricao.ins_tor_torneios.tor_id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Desistir</button>
+                                    </form>
+                                    <button type="button" class="btn btn-primary" id="confirmDesistirButton">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
                 </tbody>
             </table>

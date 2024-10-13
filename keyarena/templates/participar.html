@@ -39,12 +39,13 @@
                         </td>
                         <td>{{ torneio.tor_data_inicio|date:"d/m/Y" }}</td>
                         <td>
-                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ torneio.tor_id }}">
-                                Detalhes
-                            </button>
+                            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ torneio.tor_id }}">Detalhes</button>
                         </td>
                         <td>
-                            <button class="btn btn-info">Participar</button>
+                            <form action="{% url 'inscricao' torneio.tor_id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-info">Participar</button>
+                            </form>
                         </td>
                     </tr>
                     <div class="modal fade" id="descriptionModal{{ torneio.tor_id }}" tabindex="-1" aria-labelledby="descriptionModal{{ torneio.tor_id }}Label" aria-hidden="true">

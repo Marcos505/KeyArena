@@ -157,3 +157,51 @@
 a,.dropdown {
   cursor: pointer;
 }
+
+.qrcode_login {
+  max-width: 80%; /* A imagem ocupará no máximo 80% da largura do contêiner */
+  height: 40%; /* Mantém a proporção da imagem */
+  margin: 0; /* Adiciona margem vertical */
+}
+
+.content_qrcode {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* Centraliza horizontalmente */
+  height: calc(100vh - 56px - 50px); /* Altura total da viewport menos a altura da navbar e footer */
+  padding: 20px; /* Adiciona um pouco de espaçamento */
+  box-sizing: border-box; /* Inclui o padding na largura total */
+  overflow: hidden; /* Esconde o conteúdo que ultrapassa o contêiner */
+  margin-top: 0;
+}
+
+
+.info {
+  text-align: center; /* Centraliza o texto dentro da div de info */
+  max-width: 600px; /* Limita a largura do texto */
+  font-size: 1rem; /* Tamanho base da fonte */
+  line-height: 1.5; /* Aumenta o espaçamento entre linhas */
+}
+
+@media (max-width: 768px) {
+  .content_qrcode {
+    height: auto; /* Permite que a altura se ajuste conforme necessário em telas menores */
+    padding: 10px; /* Diminui o padding em telas menores */
+  }
+
+  .qrcode_login {
+    max-width: 100%; /* A imagem ocupará 100% em telas menores */
+  }
+
+  .info {
+    font-size: 0.9rem; /* Diminui o tamanho da fonte em telas menores */
+    padding: 0 10px; /* Adiciona padding lateral para evitar que o texto fique muito próximo das bordas */
+  }
+}
+
+@media (max-width: 480px) {
+  .info {
+    font-size: 12px; /* Diminui ainda mais o tamanho da fonte em telas muito pequenas */
+  }
+}

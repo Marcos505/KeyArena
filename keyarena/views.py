@@ -1,6 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
+# from io import BytesIO
+# import pyotp
+# import qrcode
+# import base64
 from .models import InscricaoTorneio, TiposTorneio, Usuario
 from keyarena.models import Torneio
 from django.contrib.auth.forms import AuthenticationForm
@@ -12,10 +16,13 @@ def index(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            login(request, user)  # Autentica o usuário na sessão
+            login(request, user)
+            print(f'Usuário {user.usu_email} logado com sucesso.')
+            # if user.first_login:
+            #     return redirect('qrcode_login')
             return redirect('home_page')
         else:
-            messages.error(request, "Credenciais inválidas. Tente novamente.")  # Mensagem de erro
+            messages.error(request, "Credenciais inválidas. Tente novamente.")
     else:
         form = AuthenticationForm()
     
@@ -44,10 +51,12 @@ def cadastro(request):
     
     return render(request, 'cadastro.html')
 
+@login_required
 def home_page(request):
     usuario = request.user
     return render(request, 'page_home.html', {'usuario': usuario})
 
+@login_required
 def salvar_torneio1(request):
     modalidades = TiposTorneio.objects.all()
     if request.method == 'POST':
@@ -67,6 +76,7 @@ def salvar_torneio1(request):
 
     return render(request, 'criartorneio.html', {'modalidades': modalidades})
 
+@login_required
 def salvar_torneio2(request):
     if request.method == 'POST':
         data_inicio_torneio = request.POST.get('start-date')
@@ -101,7 +111,7 @@ def salvar_torneio2(request):
 
         torneio.save()
 
-        request.session.flush()
+        # request.session.flush()
 
         messages.success(request, 'Torneio criado com sucesso!')
         return redirect('home_page')
@@ -138,6 +148,7 @@ def perfil(request):
     
     return render(request, 'perfil.html', {'usuario': usuario})
 
+@login_required
 def participar(request):
     usuario_da_sessao_id = request.user.id 
     torneios = Torneio.objects.exclude(tor_usu_criador_id=usuario_da_sessao_id)  
@@ -148,6 +159,7 @@ def sair(request):
     logout(request)
     return redirect('index')
 
+@login_required
 def inscricao(request, torneio_id):
     torneio = Torneio.objects.get(tor_id=torneio_id)
 
@@ -172,3 +184,45 @@ def inscricao(request, torneio_id):
         return render(request, 'inscricao.html', {'torneio': torneio})
 
     return render(request, 'inscricao.html', {'torneio': torneio})
+
+@login_required
+def cancelar_inscricao(request, torneio_id):
+    torneio = Torneio.objects.get(tor_id=torneio_id)
+
+    inscricao_existente = InscricaoTorneio.objects.filter(
+        ins_usu_participante=request.user,
+        ins_tor_torneios=torneio
+    ).first()
+
+    if inscricao_existente:
+        inscricao_existente.delete()
+        print('perdeu por K.O')
+        return redirect('torneios')  # Redirecionar após cancelar
+
+    return redirect('torneios.html')  # Redirecionar se não estava inscrito
+
+
+# def qrcode_login(request):
+#     user = request.user  
+#     token = user.generate_2fa_token()  
+#     email_user = user.usu_email
+
+#     link = pyotp.totp.TOTP(token).provisioning_uri(issuer_name='Themis', name=email_user)
+
+#     qr = qrcode.QRCode(
+#         version=1,
+#         error_correction=qrcode.constants.ERROR_CORRECT_L,
+#         box_size=10,
+#         border=4,
+#     )
+#     qr.add_data(link)
+#     qr.make(fit=True)
+#     img = qr.make_image(fill_color="black", back_color="white")
+
+#     buffer = BytesIO()
+#     img.save(buffer, format="PNG")
+#     buffer.seek(0)
+
+#     img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+#     return render(request, 'qrcode_login.html', {'img_base64': img_base64})
