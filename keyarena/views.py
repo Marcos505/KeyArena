@@ -1,10 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
-# from io import BytesIO
-# import pyotp
-# import qrcode
-# import base64
+from io import BytesIO
+import pyotp
+import qrcode
+import base64
 from .models import InscricaoTorneio, TiposTorneio, Usuario
 from keyarena.models import Torneio
 from django.contrib.auth.forms import AuthenticationForm
@@ -18,8 +18,8 @@ def index(request):
             user = form.get_user()
             login(request, user)
             print(f'Usuário {user.usu_email} logado com sucesso.')
-            # if user.first_login:
-            #     return redirect('qrcode_login')
+            if user.first_login:
+                return redirect('qrcode_login')
             return redirect('home_page')
         else:
             messages.error(request, "Credenciais inválidas. Tente novamente.")
@@ -111,7 +111,6 @@ def salvar_torneio2(request):
 
         torneio.save()
 
-        # request.session.flush()
 
         messages.success(request, 'Torneio criado com sucesso!')
         return redirect('home_page')
@@ -202,27 +201,45 @@ def cancelar_inscricao(request, torneio_id):
     return redirect('torneios.html')  # Redirecionar se não estava inscrito
 
 
-# def qrcode_login(request):
-#     user = request.user  
-#     token = user.generate_2fa_token()  
-#     email_user = user.usu_email
+def qrcode_login(request):
+    user = request.user  
+    token = user.generate_2fa_token()  
+    email_user = user.usu_email
 
-#     link = pyotp.totp.TOTP(token).provisioning_uri(issuer_name='Themis', name=email_user)
+    link = pyotp.totp.TOTP(token).provisioning_uri(issuer_name='keyarena', name=email_user)
 
-#     qr = qrcode.QRCode(
-#         version=1,
-#         error_correction=qrcode.constants.ERROR_CORRECT_L,
-#         box_size=10,
-#         border=4,
-#     )
-#     qr.add_data(link)
-#     qr.make(fit=True)
-#     img = qr.make_image(fill_color="black", back_color="white")
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(link)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
 
-#     buffer = BytesIO()
-#     img.save(buffer, format="PNG")
-#     buffer.seek(0)
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    buffer.seek(0)
 
-#     img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
 
-#     return render(request, 'qrcode_login.html', {'img_base64': img_base64})
+
+    return render(request, 'qrcode_login.html', {'img_base64': img_base64})
+
+
+def validacao_otp(request):
+    if request.method == 'POST':
+        codigo = request.POST.get('codigo')
+
+        user = request.user  
+        token = user.key_auth
+        print(token)
+
+        otp = pyotp.TOTP(token)
+        code_right = otp.now()
+        if codigo == code_right:
+            return redirect('home_page')
+        else:
+            return redirect('qrcode_login')
+    return redirect('home_page')

@@ -18,7 +18,9 @@ urlpatterns = [
     path('sair/', views.sair, name='sair'),
     path('inscricao/<int:torneio_id>/', views.inscricao, name='inscricao'),
     path('cancelar_inscricao/<int:torneio_id>/', views.cancelar_inscricao, name='cancelar_inscricao'),
-    # path('qrcode_login/', views.qrcode_login, name='qrcode_login')
+    path('qrcode_login/', views.qrcode_login, name='qrcode_login'),
+
+    path('validacao_otp/', views.validacao_otp, name='validacao_otp')
 ]
 
 if settings.DEBUG:
