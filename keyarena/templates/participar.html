@@ -8,7 +8,11 @@
 <body>
 
     {% include 'components/navbar.html' %}
+
+
+
 <main class='content'>
+
     <div class="container1">
         <div class="table-container">
             <h1 class="text-center">Torneios Ativos</h1>
@@ -20,7 +24,8 @@
                         <th>Modalidade</th>
                         <th>Participantes</th>
                         <th>Status</th>
-                        <th>Data de inicio</th>
+                        <th>Data de início</th>
+
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -39,15 +44,16 @@
                         </td>
                         <td>{{ torneio.tor_data_inicio|date:"d/m/Y" }}</td>
                         <td>
-                            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ torneio.tor_id }}">Detalhes</button>
+
+                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ torneio.tor_id }}">Detalhes</button>
                         </td>
                         <td>
-                            <form action="{% url 'inscricao' torneio.tor_id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-info">Participar</button>
-                            </form>
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#participateModal{{ torneio.tor_id }}">Participar</button>
                         </td>
                     </tr>
+
+                    <!-- Modal para Detalhes -->
+
                     <div class="modal fade" id="descriptionModal{{ torneio.tor_id }}" tabindex="-1" aria-labelledby="descriptionModal{{ torneio.tor_id }}Label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -60,7 +66,31 @@
                                     Data de início: {{ torneio.tor_data_inicio|date:"d/m/Y" }}.
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal para Participar -->
+                    <div class="modal fade" id="participateModal{{ torneio.tor_id }}" tabindex="-1" aria-labelledby="participateModal{{ torneio.tor_id }}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="participateModal{{ torneio.tor_id }}Label">Inscrição no Torneio {{ torneio.tor_nome_torneio }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Deseja confirmar a sua participação no torneio <strong>{{ torneio.tor_nome_torneio }}</strong>?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="{% url 'inscricao' torneio.tor_id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success">Confirmar Participação</button>
+                                    </form>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+
                                 </div>
                             </div>
                         </div>
@@ -68,6 +98,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+
             <table class="table table-striped d-none" id="table2">
                 <thead>
                     <tr>
@@ -95,6 +126,7 @@
         </div>
     </div>
 </main>
+
     {% include 'components/footer.html' %}
 
     <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>

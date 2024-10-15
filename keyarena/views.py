@@ -121,6 +121,7 @@ def salvar_torneio2(request):
 def entrartorneio(request):
     usuario = request.user
 
+
     torneios = Torneio.objects.all()
     torneios = Torneio.objects.filter(tor_usu_criador=usuario)
 
@@ -161,6 +162,7 @@ def sair(request):
 @login_required
 def inscricao(request, torneio_id):
     torneio = Torneio.objects.get(tor_id=torneio_id)
+    num_participantes = torneio.tor_quant_participantes
 
     if request.method == 'POST':
         inscricao_existente = InscricaoTorneio.objects.filter(
@@ -180,9 +182,13 @@ def inscricao(request, torneio_id):
         inscricao.ins_usu_participante = request.user 
         inscricao.save() 
 
-        return render(request, 'inscricao.html', {'torneio': torneio})
+        return render(request, 'inscricao.html', {
+            'torneio': torneio,
+            'quant_participantes':num_participantes })
 
-    return render(request, 'inscricao.html', {'torneio': torneio})
+    return render(request, 'inscricao.html', 
+        {'torneio': torneio,
+        'quant_participantes': num_participantes })
 
 @login_required
 def cancelar_inscricao(request, torneio_id):
@@ -200,6 +206,14 @@ def cancelar_inscricao(request, torneio_id):
 
     return redirect('torneios.html')  # Redirecionar se não estava inscrito
 
+
+
+    torneios = Torneio.objects.all()
+    torneios = Torneio.objects.filter(tor_usu_criador=usuario)
+
+    inscricoes = InscricaoTorneio.objects.filter(ins_usu_participante=usuario)
+
+    return render(request, 'torneios.html', {'torneios': torneios, 'inscricoes': inscricoes})
 
 def qrcode_login(request):
     user = request.user  
@@ -254,3 +268,4 @@ def validacao_otp(request):
 
 def qrcode_auth(request):
     return render(request, 'qrcode_auth.html')
+
