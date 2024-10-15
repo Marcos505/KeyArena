@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    {% block head %} {% include "components/head.html" %} {% endblock %}
-    <title>KeyArena</title>
-  </head>
+<head>
+    {% load static %}
+    {% include 'components/head.html' with title='KeyArena' %}
+</head>
+
 
   <body>
     <div class="bg-image"></div>

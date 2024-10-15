@@ -83,8 +83,132 @@ def salvar_torneio2(request):
     return render(request, 'criartorneio2.html')
 
 def entrartorneio(request):
-    return render(request, 'torneios.html')
+    usuario = request.user
 
-def profile(request):
-    return render(request, 'perfil.html')
-  
+    torneios = Torneio.objects.all()
+    torneios = Torneio.objects.filter(tor_usu_criador=usuario)
+
+    inscricoes = InscricaoTorneio.objects.filter(ins_usu_participante=usuario)
+
+    return render(request, 'torneios.html', {'torneios': torneios, 'inscricoes': inscricoes})
+
+@login_required
+def perfil(request):
+    usuario = request.user
+    if request.method == 'POST':
+        usuario.usu_nome_completo = request.POST.get('nome')
+        usuario.usu_data_nascimento = request.POST.get('data_nascimento')
+        usuario.usu_email = request.POST.get('email')
+        usuario.usu_nickname = request.POST.get('nickname')
+        usuario.usu_telefone = request.POST.get('telefone')
+        
+
+        if request.FILES.get('foto_perfil'):
+            usuario.foto_perfil = request.FILES['foto_perfil']
+            
+        usuario.save()
+        return redirect('perfil')
+    
+    return render(request, 'perfil.html', {'usuario': usuario})
+
+@login_required
+def participar(request):
+    usuario_da_sessao_id = request.user.id 
+    torneios = Torneio.objects.exclude(tor_usu_criador_id=usuario_da_sessao_id)  
+
+    return render(request, 'participar.html', {'torneios': torneios})
+
+def sair(request):
+    logout(request)
+    return redirect('index')
+
+@login_required
+def inscricao(request, torneio_id):
+    torneio = Torneio.objects.get(tor_id=torneio_id)
+    num_participantes = torneio.tor_quant_participantes
+
+    if request.method == 'POST':
+        inscricao_existente = InscricaoTorneio.objects.filter(
+            ins_usu_participante=request.user,
+            ins_tor_torneios=torneio
+        ).first()
+
+        if inscricao_existente:
+            
+            return render(request, 'inscricao.html', {
+                'torneio': torneio,
+                'mensagem': 'Você já está inscrito neste torneio.'
+            })
+
+        inscricao = InscricaoTorneio()
+        inscricao.ins_tor_torneios = torneio
+        inscricao.ins_usu_participante = request.user 
+        inscricao.save() 
+
+        return render(request, 'inscricao.html', {
+            'torneio': torneio,
+            'quant_participantes':num_participantes })
+
+    return render(request, 'inscricao.html', 
+        {'torneio': torneio,
+        'quant_participantes': num_participantes })
+
+@login_required
+def cancelar_inscricao(request, torneio_id):
+    torneio = Torneio.objects.get(tor_id=torneio_id)
+
+    inscricao_existente = InscricaoTorneio.objects.filter(
+        ins_usu_participante=request.user,
+        ins_tor_torneios=torneio
+    ).first()
+
+    if inscricao_existente:
+        inscricao_existente.delete()
+        print('perdeu por K.O')
+        return redirect('torneios')  # Redirecionar após cancelar
+
+    return redirect('torneios.html')  # Redirecionar se não estava inscrito
+
+
+def qrcode_login(request):
+    user = request.user  
+    token = user.generate_2fa_token()  
+    email_user = user.usu_email
+
+    link = pyotp.totp.TOTP(token).provisioning_uri(issuer_name='keyarena', name=email_user)
+
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(link)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    buffer.seek(0)
+
+    img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+
+    return render(request, 'qrcode_login.html', {'img_base64': img_base64})
+
+
+def validacao_otp(request):
+    if request.method == 'POST':
+        codigo = request.POST.get('codigo')
+
+        user = request.user  
+        token = user.key_auth
+        print(token)
+
+        otp = pyotp.TOTP(token)
+        code_right = otp.now()
+        if codigo == code_right:
+            return redirect('home_page')
+        else:
+            return redirect('qrcode_login')
+    return redirect('home_page')
