@@ -104,12 +104,7 @@
   display: block;
 }
 
-/* Navbar */
-.navbar {
-  height: 80px;
-  background-color: #212529;
-  padding: 0.5rem 1rem;
-}
+
 
 .container-fluid {
   display: flex;
@@ -118,16 +113,7 @@
   height: 100%;
 }
 
-/* Para centralizar a logo e o ícone */
-.navbar-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
-.navbar-brand i {
-  font-size: 1.5rem;
-}
 
 .avatar {
   display: flex;
@@ -204,4 +190,57 @@ a,.dropdown {
   .info {
     font-size: 12px; /* Diminui ainda mais o tamanho da fonte em telas muito pequenas */
   }
+}
+
+.btn{
+  border: none;
+}
+
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  height: 80px;
+  background-color: #212529;
+  padding: 0.5rem 1rem;
+  z-index: 1000; /* Certifique-se de que ela está acima de outros elementos */
+}
+
+/* Para centralizar a logo e o ícone */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-brand i {
+  font-size: 1.5rem;
+}
+
+.footer {
+  background-color: #212529;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.content {
+  margin-top: 80px; /* Altura da navbar */
+  margin-bottom: 100px; /* Espaço para o footer fixo */
+  padding: 20px;
+  height: calc(100vh - 180px); /* Altura da viewport menos navbar e footer */
+  overflow-y: auto; /* Permitir rolagem apenas na área de conteúdo */
 }

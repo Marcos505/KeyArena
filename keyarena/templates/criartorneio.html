@@ -25,6 +25,7 @@
   </head>
   <body>
     {% include 'components/navbar.html' %}
+    <main class='content'>
     <div class="form-container">
       <h1>Crie seu torneio</h1>
       <form method="POST" action="{% url 'salvar_torneio1' %}">
@@ -76,7 +77,7 @@
 
       </form>
     </div>
-
+  </main>
     {% include 'components/footer.html' %}
 
     <script

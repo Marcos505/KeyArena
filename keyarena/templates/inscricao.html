@@ -10,6 +10,7 @@
 
 <body>
     {% include 'components/navbar.html' %}
+    <main class='content'>
     <div class="container1">
         <div class="content" id="content">
             <h1>{{ torneio.tor_nome_torneio }}!</h1>
@@ -20,6 +21,7 @@
             {% endif %}
             <h2>Aqui vai aparecer o chaveamento</h2>
         </div>
+    </main>
 </body>
 {% include 'components/footer.html' %}
 <script

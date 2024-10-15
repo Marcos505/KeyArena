@@ -20,7 +20,7 @@ def index(request):
             print(f'Usuário {user.usu_email} logado com sucesso.')
             if user.first_login:
                 return redirect('qrcode_login')
-            return redirect('home_page')
+            return redirect('qrcode_auth')
         else:
             messages.error(request, "Credenciais inválidas. Tente novamente.")
     else:
@@ -234,12 +234,21 @@ def validacao_otp(request):
 
         user = request.user  
         token = user.key_auth
-        print(token)
 
         otp = pyotp.TOTP(token)
         code_right = otp.now()
+
         if codigo == code_right:
+            # Redireciona para a página inicial após validação correta do OTP
             return redirect('home_page')
         else:
-            return redirect('qrcode_login')
-    return redirect('home_page')
+            # Se o OTP estiver errado e for o primeiro login
+            if user.first_login:
+                user.first_login = 'False'  # Altera o campo first_login
+                user.save()  # Salva as alterações no banco de dados
+                return redirect('qrcode_login')
+            else:
+                return redirect('qrcode_auth')  
+
+def qrcode_auth(request):
+    return render(request, 'qrcode_auth.html')

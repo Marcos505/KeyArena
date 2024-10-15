@@ -7,6 +7,7 @@
   </head>
   <body>
     {% include 'components/navbar.html' %}
+    <main class='content'>
     <div class="form-container">
       <h1>Crie seu torneio</h1>
       <form method="POST" action="{% url 'salvar_torneio2' %}">
@@ -44,7 +45,8 @@
         </div>
       </form>
     </div>
-      
+  </main>
+  {% include 'components/footer.html' %}
     <script
       src="https://kit.fontawesome.com/eb67357ef4.js"
       crossorigin="anonymous"
@@ -54,5 +56,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+  
   </body>
 </html>

@@ -18,12 +18,9 @@
     </nav>
       <main class='content'>
         <div class="content_qrcode ">
-            <h1>Escaneie o QR Code</h1>
             {% csrf_token %}
-            <img class="qrcode_login" src="data:image/png;base64,{{ img_base64 }}" alt="QR Code para 2FA">
             <div class="info">
-                <p>Use um aplicativo de autenticação como Google Authenticator, Authy ou similares.</p>
-                <p>Após escanear o QR Code, você receberá códigos temporários de autenticação para acessar sua conta.</p>
+                <p>Abra seu aplicativo de autenticação.</p>
                 <p>Forneça o codigo correto</p>
             </div>
             <form class="container-qrcode" method="POST" action="{% url 'validacao_otp' %}">
