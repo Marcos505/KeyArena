@@ -59,6 +59,7 @@ def home_page(request):
 @login_required
 def salvar_torneio1(request):
     modalidades = TiposTorneio.objects.all()
+    usuario = request.user
     if request.method == 'POST':
         nome_torneio = request.POST.get('tournament-name')
         modalidade_id = request.POST.get('modality')
@@ -74,10 +75,11 @@ def salvar_torneio1(request):
 
         return redirect('salvar_torneio2')
 
-    return render(request, 'criartorneio.html', {'modalidades': modalidades})
+    return render(request, 'criartorneio.html', {'modalidades': modalidades, 'usuario': usuario})
 
 @login_required
 def salvar_torneio2(request):
+    usuario = request.user
     if request.method == 'POST':
         data_inicio_torneio = request.POST.get('start-date')
         data_inicio_inscricao = request.POST.get('registration-start')
@@ -115,7 +117,7 @@ def salvar_torneio2(request):
         messages.success(request, 'Torneio criado com sucesso!')
         return redirect('home_page')
 
-    return render(request, 'criartorneio2.html')
+    return render(request, 'criartorneio2.html', {'usuario': usuario})
 
 @login_required
 def entrartorneio(request):
@@ -127,7 +129,7 @@ def entrartorneio(request):
 
     inscricoes = InscricaoTorneio.objects.filter(ins_usu_participante=usuario)
 
-    return render(request, 'torneios.html', {'torneios': torneios, 'inscricoes': inscricoes})
+    return render(request, 'torneios.html', {'torneios': torneios, 'inscricoes': inscricoes, 'usuario': usuario})
 
 @login_required
 def perfil(request):
@@ -151,9 +153,10 @@ def perfil(request):
 @login_required
 def participar(request):
     usuario_da_sessao_id = request.user.id 
+    usuario = request.user
     torneios = Torneio.objects.exclude(tor_usu_criador_id=usuario_da_sessao_id)  
 
-    return render(request, 'participar.html', {'torneios': torneios})
+    return render(request, 'participar.html', {'torneios': torneios ,'usuario': usuario})
 
 def sair(request):
     logout(request)
@@ -161,6 +164,7 @@ def sair(request):
 
 @login_required
 def inscricao(request, torneio_id):
+    usuario = request.user
     torneio = Torneio.objects.get(tor_id=torneio_id)
     num_participantes = torneio.tor_quant_participantes
 
@@ -174,7 +178,7 @@ def inscricao(request, torneio_id):
             
             return render(request, 'inscricao.html', {
                 'torneio': torneio,
-                'mensagem': 'Você já está inscrito neste torneio.'
+                'mensagem': 'Você já está inscrito neste torneio.', 'usuario': usuario
             })
 
         inscricao = InscricaoTorneio()
@@ -184,11 +188,11 @@ def inscricao(request, torneio_id):
 
         return render(request, 'inscricao.html', {
             'torneio': torneio,
-            'quant_participantes':num_participantes })
+            'quant_participantes':num_participantes, 'usuario': usuario})
 
     return render(request, 'inscricao.html', 
         {'torneio': torneio,
-        'quant_participantes': num_participantes })
+        'quant_participantes': num_participantes,'usuario': usuario})
 
 @login_required
 def cancelar_inscricao(request, torneio_id):
