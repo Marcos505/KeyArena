@@ -239,13 +239,15 @@ def validacao_otp(request):
         code_right = otp.now()
 
         if codigo == code_right:
+            if user.first_login:
+                user.first_login = 'False'  # Altera o campo first_login
+                user.save()  # Salva as alterações no banco de dados
             # Redireciona para a página inicial após validação correta do OTP
             return redirect('home_page')
         else:
             # Se o OTP estiver errado e for o primeiro login
             if user.first_login:
-                user.first_login = 'False'  # Altera o campo first_login
-                user.save()  # Salva as alterações no banco de dados
+
                 return redirect('qrcode_login')
             else:
                 return redirect('qrcode_auth')  
