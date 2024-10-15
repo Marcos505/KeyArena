@@ -13,6 +13,7 @@
                 <form action="{% url 'cadastro' %}" method="POST">
                     {% csrf_token %}
                     <h2 class="text-light">Cadastro de Usuário</h2>
+                    {% include 'components/messages.html' %}
                     <div class="form-group">
                         <label for="email" class="text-light">Endereço de email</label>
                         <input type="email" class="form-control" placeholder="Email..." name="email" required>
