@@ -9,6 +9,10 @@
 
     {% include 'components/navbar.html' %}
 
+
+
+<main class='content'>
+
     <div class="container1">
         <div class="table-container">
             <h1 class="text-center">Torneios Ativos</h1>
@@ -21,6 +25,7 @@
                         <th>Participantes</th>
                         <th>Status</th>
                         <th>Data de início</th>
+
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -39,6 +44,7 @@
                         </td>
                         <td>{{ torneio.tor_data_inicio|date:"d/m/Y" }}</td>
                         <td>
+
                             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ torneio.tor_id }}">Detalhes</button>
                         </td>
                         <td>
@@ -47,6 +53,7 @@
                     </tr>
 
                     <!-- Modal para Detalhes -->
+
                     <div class="modal fade" id="descriptionModal{{ torneio.tor_id }}" tabindex="-1" aria-labelledby="descriptionModal{{ torneio.tor_id }}Label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -59,6 +66,7 @@
                                     Data de início: {{ torneio.tor_data_inicio|date:"d/m/Y" }}.
                                 </div>
                                 <div class="modal-footer">
+
                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
                                 </div>
                             </div>
@@ -82,6 +90,7 @@
                                         <button type="submit" class="btn btn-success">Confirmar Participação</button>
                                     </form>
                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+
                                 </div>
                             </div>
                         </div>
@@ -89,8 +98,34 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+            <table class="table table-striped d-none" id="table2">
+                <thead>
+                    <tr>
+                        <th>ID da Inscrição</th>
+                        <th>Nome do Torneio</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inscricao in inscricoes %}
+                    <tr>
+                        <td>{{ inscricao.ins_id }}</td>
+                        <td>{{ inscricao.ins_tor_torneios.tor_nome_torneio }}</td>
+                        <td>
+                            {% if inscricao.ins_tor_torneios.tor_ativo %}
+                                Ativo
+                            {% else %}
+                                Finalizado
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
+</main>
 
     {% include 'components/footer.html' %}
 
@@ -120,9 +155,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-  

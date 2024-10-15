@@ -1,4 +1,4 @@
-/*Page Laogin*/
+/* Estilos personalizados */
 
 .custom-icon {
   font-size: 2rem;
@@ -29,7 +29,8 @@
 .avatar img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ajusta a imagem para preencher o contêiner */
+  object-fit: cover;
+  /* Ajusta a imagem para preencher o contêiner */
 }
 
 .bg-image {
@@ -49,11 +50,7 @@
   z-index: -1;
 }
 
-form {
-  background: #000000;
-}
-
-/*Page cadastro*/
+/* Página de cadastro */
 
 .container {
   width: 100%;
@@ -67,7 +64,7 @@ form {
 .form-box h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: #fff;
 }
 
 .card-body {
@@ -105,4 +102,145 @@ form {
 
 .tournament-row:hover ~ #description-box {
   display: block;
+}
+
+
+
+.container-fluid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+
+
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Ajustes no dropdown */
+.dropdown-menu-end {
+  right: 0;
+  left: auto;
+}
+
+.dropdown-item {
+  font-size: 1rem;
+}
+
+.btn-hover:hover{
+  background-color: #212529;
+}
+
+.form-login{
+  background-color:rgb(0, 0, 0)
+}
+
+a,.dropdown {
+  cursor: pointer;
+}
+
+.qrcode_login {
+  max-width: 80%; /* A imagem ocupará no máximo 80% da largura do contêiner */
+  height: 40%; /* Mantém a proporção da imagem */
+  margin: 0; /* Adiciona margem vertical */
+}
+
+.content_qrcode {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* Centraliza horizontalmente */
+  height: calc(100vh - 56px - 50px); /* Altura total da viewport menos a altura da navbar e footer */
+  padding: 20px; /* Adiciona um pouco de espaçamento */
+  box-sizing: border-box; /* Inclui o padding na largura total */
+  overflow: hidden; /* Esconde o conteúdo que ultrapassa o contêiner */
+  margin-top: 0;
+}
+
+
+.info {
+  text-align: center; /* Centraliza o texto dentro da div de info */
+  max-width: 600px; /* Limita a largura do texto */
+  font-size: 1rem; /* Tamanho base da fonte */
+  line-height: 1.5; /* Aumenta o espaçamento entre linhas */
+}
+
+@media (max-width: 768px) {
+  .content_qrcode {
+    height: auto; /* Permite que a altura se ajuste conforme necessário em telas menores */
+    padding: 10px; /* Diminui o padding em telas menores */
+  }
+
+  .qrcode_login {
+    max-width: 100%; /* A imagem ocupará 100% em telas menores */
+  }
+
+  .info {
+    font-size: 0.9rem; /* Diminui o tamanho da fonte em telas menores */
+    padding: 0 10px; /* Adiciona padding lateral para evitar que o texto fique muito próximo das bordas */
+  }
+}
+
+@media (max-width: 480px) {
+  .info {
+    font-size: 12px; /* Diminui ainda mais o tamanho da fonte em telas muito pequenas */
+  }
+}
+
+.btn{
+  border: none;
+}
+
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  height: 80px;
+  background-color: #212529;
+  padding: 0.5rem 1rem;
+  z-index: 1000; /* Certifique-se de que ela está acima de outros elementos */
+}
+
+/* Para centralizar a logo e o ícone */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-brand i {
+  font-size: 1.5rem;
+}
+
+.footer {
+  background-color: #212529;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.content {
+  margin-top: 80px; /* Altura da navbar */
+  margin-bottom: 100px; /* Espaço para o footer fixo */
+  padding: 20px;
+  height: calc(100vh - 180px); /* Altura da viewport menos navbar e footer */
+  overflow-y: auto; /* Permitir rolagem apenas na área de conteúdo */
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% include 'components/head.html' with title='KeyArena' %}
+</head>
+
+
+<body>
+    {% load static %}
+    <nav class="navbar navbar-dark bg-dark fixed-top py-2">
+      <div class="container-fluid">
+        <a class="navbar-brand">
+          <i class="bi bi-key-fill m-2"></i>
+          KeyArena
+        </a>
+      </div>
+    </nav>
+      <main class='content'>
+        <div class="content_qrcode ">
+            <h1>Escaneie o QR Code</h1>
+            {% csrf_token %}
+            <img class="qrcode_login" src="data:image/png;base64,{{ img_base64 }}" alt="QR Code para 2FA">
+            <div class="info">
+                <p>Use um aplicativo de autenticação como Google Authenticator, Authy ou similares.</p>
+                <p>Após escanear o QR Code, você receberá códigos temporários de autenticação para acessar sua conta.</p>
+                <p>Forneça o codigo correto</p>
+            </div>
+            <form class="container-qrcode" method="POST" action="{% url 'validacao_otp' %}">
+              {% csrf_token %}
+              <input type="text" class="input-2fa" name="codigo">
+              <button type="submit"class="btn btn-primary">Confirmar</button>
+        </form>
+          
+        </div>
+      </main>
+      </body>
+    {% include 'components/footer.html' %}
+    <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</html>

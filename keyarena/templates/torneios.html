@@ -2,119 +2,174 @@
 <html lang="en">
 <head>
     {% load static %}
-    {% block head %} {% include "components/head.html" %} {% endblock %}
-    <title>KeyArena</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'global/css/style.css' %}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    {% include 'components/head.html' with title='KeyArena' %}
 </head>
+
 <body>
 
     {% include 'components/navbar.html' %}
-
+    <main class='content'>
     <div class="container1">
         <div class="table-container">
-            <h1 class="text-center">Torneios Existentes</h1>
-            <table class="table table-striped">
+            <h1 class="text-center">Meus Torneios</h1>
+            <div class="mb-3" style="width: 240px;">
+                <button id="troca" class="btn btn-primary">Ver minhas inscrições</button>
+            </div>
+            <input type="text" id="filterInput" placeholder="Filtrar por nome ou modalidade" class="form-control mb-3" style="width: 240px;">
+            <table class="table table-striped" id="table1">
                 <thead>
                     <tr>
                         <th>Nome do Torneio</th>
                         <th>Modalidade</th>
                         <th>Participantes</th>
-                        <th>Data de Início</th>
-                        <th>Descrição</th>
+                        <th>Status</th>
+                        <th>Data de Inicio</th>
+
+                    </tr>
+                </thead>
+                <tbody id="tournamentTable">
+                    {% for torneio in torneios %}
+                    <tr>
+                        <td>{{ torneio.tor_nome_torneio }}</td>
+                        <td>{{ torneio.tor_tipo_torneio.ttor_tipo }}</td>
+                        <td>{{ torneio.tor_quant_participantes }}</td>
+                        <td>
+                        {% if torneio.tor_ativo %}
+                            Ativo
+                        {% else %}
+                            Finalizado
+                        {% endif %}
+                        </td>
+                        <td>{{ torneio.tor_data_inicio|date:"d/m/Y" }}</td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ torneio.tor_id }}">
+                                Descrição
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-info">Chaveamento</button>
+                        </td>
+                    </tr>
+                    <div class="modal fade" id="descriptionModal{{ torneio.tor_id }}" tabindex="-1" aria-labelledby="descriptionModal{{ torneio.tor_id }}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="descriptionModal{{ torneio.tor_id }}Label">Desistir do {{ torneio.tor_nome_torneio }}?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Descrição: {{ torneio.tor_descricao }}.<br>
+                                    Data de início: {{ torneio.tor_data_inicio|date:"d/m/Y" }}.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <table class="table table-striped d-none" id="table2">
+                <thead>
+                    <tr>
+                        <!-- <th>ID da Inscrição</th> -->
+                        <th>Nome do Torneio</th>
+                        <th>Status</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for inscricao in inscricoes %}
                     <tr>
-                        <td>Torneio Alpha</td>
-                        <td>Single Elimination</td>
-                        <td>16</td>
-                        <td>10/10/2024</td>
-                        <td><button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModalAlpha">Descrição</button></td>
+                        <!-- <td>{{ inscricao.ins_id }}</td> -->
+                        <td>{{ inscricao.ins_tor_torneios.tor_nome_torneio }}</td>
+                        <td>
+                            {% if inscricao.ins_tor_torneios.tor_ativo %}
+                                Ativo
+                            {% else %}
+                                Finalizado
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}">
+                                Desistir do Torneio
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}">
+                                Chaveamento
+                            </button>
+                        </td>
                     </tr>
-                    <tr>
-                        <td>Torneio Beta</td>
-                        <td>Double Elimination</td>
-                        <td>32</td>
-                        <td>15/10/2024</td>
-                        <td><button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModalBeta">Descrição</button></td>
-                    </tr>
-                    <tr>
-                        <td>Torneio Gamma</td>
-                        <td>Swiss</td>
-                        <td>64</td>
-                        <td>20/10/2024</td>
-                        <td><button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descriptionModalGamma">Descrição</button></td>
-                    </tr>
+                    <div class="modal fade" id="descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}" tabindex="-1" aria-labelledby="descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}Label">Desistir do {{ inscricao.ins_tor_torneios.tor_nome_torneio }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Aviso: Tem certeza que quer desistir?<br>
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="{% url 'cancelar_inscricao' inscricao.ins_tor_torneios.tor_id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Desistir</button>
+                                    </form>
+                                    <button type="button" class="btn btn-primary" id="confirmDesistirButton">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+</main>
 
-    <!-- Modal Alpha -->
-    <div class="modal fade" id="descriptionModalAlpha" tabindex="-1" aria-labelledby="descriptionModalAlphaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="descriptionModalAlphaLabel">Descrição do Torneio Alpha</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Torneio de eliminação simples com 16 participantes. Será realizado no dia 10/10/2024.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Inscrever-se</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Beta -->
-    <div class="modal fade" id="descriptionModalBeta" tabindex="-1" aria-labelledby="descriptionModalBetaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="descriptionModalBetaLabel">Descrição do Torneio Beta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Torneio de eliminação dupla com 32 participantes. Será realizado no dia 15/10/2024.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Gamma -->
-    <div class="modal fade" id="descriptionModalGamma" tabindex="-1" aria-labelledby="descriptionModalGammaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="descriptionModalGammaLabel">Descrição do Torneio Gamma</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Torneio no formato Swiss com 64 participantes. Será realizado no dia 20/10/2024.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-        {% include 'components/footer.html' %}
+    {% include 'components/footer.html' %}
 
     <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous">
     </script>
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('filterInput').addEventListener('keyup', function() {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#tournamentTable tr');
+
+            rows.forEach(row => {
+                const cells = row.getElementsByTagName('td');
+                const nomeTorneio = cells[0].textContent.toLowerCase();
+                const modalidade = cells[1].textContent.toLowerCase();
+
+                if (nomeTorneio.includes(filter) || modalidade.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        document.getElementById('troca').addEventListener('click', function() {
+            const table1 = document.getElementById('table1');
+            const table2 = document.getElementById('table2');
+            const title = document.querySelector('h1');
+
+            if (table1.classList.contains('d-none')) {
+                table1.classList.remove('d-none');
+                table2.classList.add('d-none');
+                title.textContent = 'Meus Torneios';
+                this.textContent = 'Ver minhas inscrições';
+            } else {
+                table1.classList.add('d-none');
+                table2.classList.remove('d-none');
+                title.textContent = 'Minhas Inscrições';
+                this.textContent = 'Ver meus torneios';
+            }
+        });
+    </script>
 </body>
 </html>
