@@ -12,6 +12,10 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 
 def index(request):
+
+    if hasattr(request.user, 'usu_id'):
+        return redirect('home_page/') 
+
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -29,6 +33,8 @@ def index(request):
     return render(request, 'index.html', {'form': form})
 
 def cadastro(request):
+    if hasattr(request.user, 'usu_id'):
+        return redirect('home_page/') 
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -211,13 +217,6 @@ def cancelar_inscricao(request, torneio_id):
     return redirect('torneios.html')  # Redirecionar se não estava inscrito
 
 
-
-    torneios = Torneio.objects.all()
-    torneios = Torneio.objects.filter(tor_usu_criador=usuario)
-
-    inscricoes = InscricaoTorneio.objects.filter(ins_usu_participante=usuario)
-
-    return render(request, 'torneios.html', {'torneios': torneios, 'inscricoes': inscricoes})
 
 def qrcode_login(request):
     user = request.user  
