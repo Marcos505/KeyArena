@@ -20,6 +20,7 @@ urlpatterns = [
     path('cancelar_inscricao/<int:torneio_id>/', views.cancelar_inscricao, name='cancelar_inscricao'),
     path('qrcode_login/', views.qrcode_login, name='qrcode_login'),
     path('qrcode_auth/', views.qrcode_auth, name='qrcode_auth'),
+    path('esqueci_senha/', views.esqueci_senha, name='esqueci_senha'),
     
     path('validacao_otp/', views.validacao_otp, name='validacao_otp')
 ]

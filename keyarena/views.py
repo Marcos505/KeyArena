@@ -15,9 +15,6 @@ from django.views.decorators.cache import never_cache
 def index(request):
     if hasattr(request.user, 'usu_id'):
         return redirect('home_page/') 
-        return redirect('home_page/') 
-
-        return redirect('home_page/')
 
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -60,11 +57,13 @@ def cadastro(request):
     
     return render(request, 'cadastro.html')
 
+@never_cache
 @login_required
 def home_page(request):
     usuario = request.user
     return render(request, 'page_home.html', {'usuario': usuario})
 
+@never_cache
 @login_required
 def salvar_torneio1(request):
     modalidades = TiposTorneio.objects.all()
@@ -85,6 +84,7 @@ def salvar_torneio1(request):
 
     return render(request, 'criartorneio.html', {'modalidades': modalidades})
 
+@never_cache
 @login_required
 def salvar_torneio2(request):
     if request.method == 'POST':
@@ -126,6 +126,7 @@ def salvar_torneio2(request):
 
     return render(request, 'criartorneio2.html')
 
+@never_cache
 @login_required
 def entrartorneio(request):
     usuario = request.user
@@ -138,6 +139,7 @@ def entrartorneio(request):
 
     return render(request, 'torneios.html', {'torneios': torneios, 'inscricoes': inscricoes})
 
+@never_cache
 @login_required
 def perfil(request):
     usuario = request.user
@@ -157,6 +159,7 @@ def perfil(request):
     
     return render(request, 'perfil.html', {'usuario': usuario})
 
+
 @never_cache
 @login_required
 def participar(request):
@@ -175,6 +178,7 @@ def sair(request):
     logout(request)
     return redirect('index')
 
+@never_cache
 @login_required
 def inscricao(request, torneio_id):
     torneio = Torneio.objects.get(tor_id=torneio_id)
@@ -206,6 +210,7 @@ def inscricao(request, torneio_id):
         {'torneio': torneio,
         'quant_participantes': num_participantes })
 
+@never_cache
 @login_required
 def cancelar_inscricao(request, torneio_id):
     torneio = Torneio.objects.get(tor_id=torneio_id)
@@ -276,3 +281,7 @@ def validacao_otp(request):
 def qrcode_auth(request):
     return render(request, 'qrcode_auth.html')
 
+def esqueci_senha(request):
+    if hasattr(request.user, 'usu_id'):
+        return redirect('home_page/') 
+    return render(request, 'esqueci_senha.html')
