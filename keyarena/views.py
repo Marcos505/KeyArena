@@ -285,3 +285,18 @@ def esqueci_senha(request):
     if hasattr(request.user, 'usu_id'):
         return redirect('home_page/') 
     return render(request, 'esqueci_senha.html')
+
+
+def mudar_senha(request):
+    email = request.GET.get('email')
+    if email:
+        try:
+            user = Usuario.objects.filter(usu_email=email).first()
+            if user:
+                key_auth = user.key_auth
+                return HttpResponse(f"A chave de autenticação para o email é: {key_auth}")
+        except Exception as e:
+            return HttpResponse(f"Ocorreu um erro: {str(e)}")
+        
+def page_not_found_view(request, exception):
+    return redirect('/')

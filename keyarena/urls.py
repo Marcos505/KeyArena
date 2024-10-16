@@ -2,7 +2,8 @@ from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.conf.urls import handler404
+from .views import page_not_found_view  
 urlpatterns = [
     path('', views.index, name='index'),
     path('cadastro/', views.cadastro, name='cadastro'),
@@ -21,9 +22,12 @@ urlpatterns = [
     path('qrcode_login/', views.qrcode_login, name='qrcode_login'),
     path('qrcode_auth/', views.qrcode_auth, name='qrcode_auth'),
     path('esqueci_senha/', views.esqueci_senha, name='esqueci_senha'),
-    
+    path('mudar_senha/', views.mudar_senha, name='mudar_senha'),
     path('validacao_otp/', views.validacao_otp, name='validacao_otp')
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+handler404 = page_not_found_view 
