@@ -37,7 +37,7 @@
                             <p class="card-text">
                                 Participante desde: {{ usuario.date_joined|date:"F" }} de {{ usuario.date_joined|date:"Y" }}
                             </p>
-                            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editarperfil">Editar Perfil</button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarperfil">Editar Perfil</button>
                         </div>
                     </div>
                 </div>
@@ -92,11 +92,11 @@
                                 <label for="telefone" class="form-label">Telefone</label>
                                 <input type="text" class="form-control" id="telefone" name="telefone" value="{{ usuario.usu_telefone }}" placeholder="Insira seu telefone">
                             </div>
-                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                            <button type="submit" class="btn btn-success">Salvar Alterações</button>
                         </form>
                         <br>
                         <div>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
                         </div>
                     </div>
                 </div>

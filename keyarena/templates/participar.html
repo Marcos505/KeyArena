@@ -48,7 +48,12 @@
                             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ torneio.tor_id }}">Detalhes</button>
                         </td>
                         <td>
-                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#participateModal{{ torneio.tor_id }}">Participar</button>
+                            {% if torneio.tor_id not in inscricoes_dict %}
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#participateModal{{ torneio.tor_id }}">Participar</button>
+                            {% else %}
+                                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#alreadyRegisteredModal{{ torneio.tor_id }}">Já Inscrito</button>
+                            {% endif %}
+                            <pre>{{ inscritos_ids }}</pre>
                         </td>
                     </tr>
 
@@ -95,6 +100,25 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Modal para aviso de já inscrito -->
+                    <div class="modal fade" id="alreadyRegisteredModal{{ torneio.tor_id }}" tabindex="-1" aria-labelledby="alreadyRegisteredModal{{ torneio.tor_id }}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="alreadyRegisteredModal{{ torneio.tor_id }}Label">Você já está inscrito em {{ torneio.tor_nome_torneio }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Você já está inscrito em <strong>{{ torneio.tor_nome_torneio }}</strong>.</p>
+                                    <p>Se precisar de mais informações, entre em contato com o organizador do torneio.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     {% endfor %}
                 </tbody>
             </table>
