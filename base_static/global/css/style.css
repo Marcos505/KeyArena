@@ -244,3 +244,28 @@ body {
   height: calc(100vh - 180px); /* Altura da viewport menos navbar e footer */
   overflow-y: auto; /* Permitir rolagem apenas na área de conteúdo */
 }
+
+.password-rules-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    width: 250px;
+    z-index: 1000;
+}
+
+.password-rules-box p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.password-rules-box ul {
+    padding-left: 20px;
+}
+
+.password-rules-box ul li {
+    font-size: 14px;
+}
