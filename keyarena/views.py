@@ -284,8 +284,11 @@ def validacao_otp(request):
             if user.first_login:
 
                 return redirect('qrcode_login')
-            else:
-                return redirect('qrcode_auth')  
+            elif mudar_senha:
+                return render(request, 'qrcode_auth.html', {'email': email})
+            else: 
+                return redirect('qrcode_auth')
+
 
 def qrcode_auth(request):
     return render(request, 'qrcode_auth.html')

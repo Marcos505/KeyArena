@@ -21,8 +21,11 @@
             <div class="info">
                 <p>Abra seu aplicativo de autenticação.</p>
                 <p>Forneça o código correto.</p>
-                <!-- Exibindo o email do usuário aqui -->
-                <p>Email de autenticação: <strong>{{ email }}</strong></p>
+
+                <!-- Exibir o email de autenticação apenas se a variável 'email' existir -->
+                {% if email %}
+                    <p>Email de autenticação: <strong>{{ email }}</strong></p>
+                {% endif %}
             </div>
             <form class="container-qrcode" method="POST" action="{% url 'validacao_otp' %}">
                 {% csrf_token %}
