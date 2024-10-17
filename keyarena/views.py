@@ -259,14 +259,22 @@ def qrcode_login(request):
 def validacao_otp(request):
     if request.method == 'POST':
         codigo = request.POST.get('codigo')
-
-        user = request.user  
-        token = user.key_auth
-
+        
+        try:
+            user = request.user  
+            token = user.key_auth
+            mudar_senha = False
+        except:
+            email = request.POST.get('email')
+            user = Usuario.objects.filter(usu_email=email).first()
+            token = user.key_auth
+            mudar_senha = True
         otp = pyotp.TOTP(token)
         code_right = otp.now()
 
         if codigo == code_right:
+            if mudar_senha:
+                render(request,'mudar_senha.html',{'email':email})
             if user.first_login:
                 user.first_login = 'False'  
                 user.save()  
@@ -288,15 +296,15 @@ def esqueci_senha(request):
 
 
 def mudar_senha(request):
-    email = request.GET.get('email')
+    email = request.POST.get('email')
     if email:
         try:
             user = Usuario.objects.filter(usu_email=email).first()
-            if user:
-                key_auth = user.key_auth
-                return HttpResponse(f"A chave de autenticação para o email é: {key_auth}")
+            if user.key_auth:
+                return render(request,'qrcode_auth.html',{'email':user.usu_email})
         except Exception as e:
-            return HttpResponse(f"Ocorreu um erro: {str(e)}")
+            return redirect('index')
         
 def page_not_found_view(request, exception):
     return redirect('/')
+
