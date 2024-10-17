@@ -266,6 +266,7 @@ def validacao_otp(request):
             mudar_senha = False
         except:
             email = request.POST.get('email')
+            print(email)
             user = Usuario.objects.filter(usu_email=email).first()
             token = user.key_auth
             mudar_senha = True
@@ -274,7 +275,7 @@ def validacao_otp(request):
 
         if codigo == code_right:
             if mudar_senha:
-                render(request,'mudar_senha.html',{'email':email})
+                return render(request,'mudar_senha.html',{'email':email})
             if user.first_login:
                 user.first_login = 'False'  
                 user.save()  
@@ -305,6 +306,16 @@ def mudar_senha(request):
         except Exception as e:
             return redirect('index')
         
+
+def troca_senha(request):
+    email = request.POST.get('email')
+    password = request.POST.get('senha1')
+    usuario = Usuario.objects.filter(usu_email=email).first()
+
+    usuario.set_password(password)
+    usuario.save()
+    return redirect('/')
+
 def page_not_found_view(request, exception):
     return redirect('/')
 

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% include 'components/head.html' with title='KeyArena' %}
+</head>
+
+<body>
+    {% load static %}
+    <nav class="navbar navbar-dark bg-dark fixed-top py-2">
+        <div class="container-fluid">
+            <a class="navbar-brand">
+                <i class="bi bi-key-fill m-2"></i>
+                KeyArena
+            </a>
+        </div>
+    </nav>
+    <main class="content">
+        <div class="content_qrcode">
+            {% csrf_token %}
+            <div class="info">
+                <p>Digite sua nova senha</p>
+            </div>
+            <form class="container-qrcode" method="POST" action="{% url 'troca_senha' %}" onsubmit="return validatePassword()">
+                {% csrf_token %}
+                <!-- Campo oculto para enviar o email -->
+                <input type="hidden" name="email" value="{{ email }}">
+
+                <!-- Campo para a nova senha -->
+                <input type="password" class="input-2fa" name="senha1" id="senha1" placeholder="Digite sua nova senha">
+                
+                <!-- Campo para a confirmação da senha -->
+                <input type="password" class="input-2fa" name="senha2" id="senha2" placeholder="Digite a senha novamente">
+                
+                <button type="submit" class="btn btn-primary">Confirmar</button>
+            </form>
+        </div>
+    </main>
+
+    {% include 'components/footer.html' %}
+    <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        function validatePassword() {
+            const senha1 = document.getElementById('senha1').value;
+            const senha2 = document.getElementById('senha2').value;
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+            // Verifica se as senhas coincidem
+            if (senha1 !== senha2) {
+                alert("As senhas não coincidem.");
+                return false; // Impede o envio do formulário
+            }
+
+            // Verifica a força da senha
+            if (!regex.test(senha1)) {
+                alert("A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número, um caractere especial e ter no mínimo 8 caracteres.");
+                return false; // Impede o envio do formulário
+            }
+
+            return true; // Permite o envio do formulário
+        }
+    </script>
+</body>
+</html>

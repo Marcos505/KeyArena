@@ -23,6 +23,7 @@ urlpatterns = [
     path('qrcode_auth/', views.qrcode_auth, name='qrcode_auth'),
     path('esqueci_senha/', views.esqueci_senha, name='esqueci_senha'),
     path('mudar_senha/', views.mudar_senha, name='mudar_senha'),
+    path('troca_senha/', views.troca_senha, name='troca_senha'),
     path('validacao_otp/', views.validacao_otp, name='validacao_otp')
 ]
 
