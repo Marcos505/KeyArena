@@ -131,13 +131,15 @@ def salvar_torneio2(request):
 def entrartorneio(request):
     usuario = request.user
 
-
-    torneios = Torneio.objects.all()
     torneios = Torneio.objects.filter(tor_usu_criador=usuario)
 
     inscricoes = InscricaoTorneio.objects.filter(ins_usu_participante=usuario)
+    show_inscricoes = request.GET.get('from_participar', 'false') == 'true'
 
-    return render(request, 'torneios.html', {'torneios': torneios, 'inscricoes': inscricoes})
+    return render(request, 'torneios.html', {
+        'torneios': torneios, 
+        'inscricoes': inscricoes,
+        'show_inscricoes': show_inscricoes})
 
 @never_cache
 @login_required
@@ -223,9 +225,9 @@ def cancelar_inscricao(request, torneio_id):
     if inscricao_existente:
         inscricao_existente.delete()
         print('perdeu por K.O')
-        return redirect('torneios')  # Redirecionar após cancelar
+        return redirect('torneios')
 
-    return redirect('torneios.html')  # Redirecionar se não estava inscrito
+    return redirect('torneios') 
 
 
 

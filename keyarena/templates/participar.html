@@ -110,40 +110,16 @@
                                 </div>
                                 <div class="modal-body">
                                     <p>Você já está inscrito em <strong>{{ torneio.tor_nome_torneio }}</strong>.</p>
-                                    <p>Se precisar de mais informações, entre em contato com o organizador do torneio.</p>
+                                    <p>Veja os torneios que você está inscrito na sua página de inscrições</p>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                                <div class="modal-footer d-flex justify-content-between">
+                                    <a id="botao_ir_inscricoes" class="btn btn-primary flex-fill me-2" href="{% url 'torneios' %}?from_participar=true">Ir para suas Inscrições</a>
+                                    <button type="button" class="btn btn-danger flex-fill" data-bs-dismiss="modal">Fechar</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <table class="table table-striped d-none" id="table2">
-                <thead>
-                    <tr>
-                        <th>ID da Inscrição</th>
-                        <th>Nome do Torneio</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for inscricao in inscricoes %}
-                    <tr>
-                        <td>{{ inscricao.ins_id }}</td>
-                        <td>{{ inscricao.ins_tor_torneios.tor_nome_torneio }}</td>
-                        <td>
-                            {% if inscricao.ins_tor_torneios.tor_ativo %}
-                                Ativo
-                            {% else %}
-                                Finalizado
-                            {% endif %}
-                        </td>
-                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

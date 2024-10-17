@@ -244,3 +244,10 @@ body {
   height: calc(100vh - 180px); /* Altura da viewport menos navbar e footer */
   overflow-y: auto; /* Permitir rolagem apenas na área de conteúdo */
 }
+
+.modal-footer .btn {
+  flex: 1; /* Faz os botões ocuparem o mesmo espaço */
+  margin: 0.5rem; /* Adiciona um pequeno espaçamento entre os botões */
+
+  
+}

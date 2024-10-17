@@ -133,7 +133,7 @@
                                             <button type="submit" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Desistir</button>
                                         </form>
-                                        <button type="button" class="btn btn-primary"
+                                        <button type="button" class="btn btn-danger"
                                             data-bs-dismiss="modal">Cancelar</button>
                                     </div>
                                 </div>
@@ -192,6 +192,30 @@
                 // Mudar a classe do botão
                 this.classList.remove('btn-success'); // remove uma classe existente
                 this.classList.add('btn-dark'); // adiciona uma nova classe
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const showInscricoes = {{ show_inscricoes|yesno:"true,false" }};
+            const table1 = document.getElementById('table1');
+            const table2 = document.getElementById('table2');
+            const title = document.querySelector('h1');
+            const button = document.getElementById('troca');
+
+
+            if (showInscricoes) {
+                table1.classList.add('d-none');
+                table2.classList.remove('d-none');
+                title.textContent = 'Minhas Inscrições';
+                button.textContent = 'Ver meus torneios';
+                button.classList.remove('btn-success');
+                button.classList.add('btn-dark');
+            } else {
+                table1.classList.remove('d-none');
+                table2.classList.add('d-none');
+                title.textContent = 'Meus Torneios';
+                button.textContent = 'Ver minhas inscrições';
+                button.classList.remove('btn-dark');
+                button.classList.add('btn-success');
             }
         });
 
