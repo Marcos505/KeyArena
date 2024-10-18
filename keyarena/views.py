@@ -261,14 +261,23 @@ def qrcode_login(request):
 def validacao_otp(request):
     if request.method == 'POST':
         codigo = request.POST.get('codigo')
-
-        user = request.user  
-        token = user.key_auth
-
+        
+        try:
+            user = request.user  
+            token = user.key_auth
+            mudar_senha = False
+        except:
+            email = request.POST.get('email')
+            print(email)
+            user = Usuario.objects.filter(usu_email=email).first()
+            token = user.key_auth
+            mudar_senha = True
         otp = pyotp.TOTP(token)
         code_right = otp.now()
 
         if codigo == code_right:
+            if mudar_senha:
+                return render(request,'mudar_senha.html',{'email':email})
             if user.first_login:
                 user.first_login = 'False'  
                 user.save()  
@@ -277,8 +286,11 @@ def validacao_otp(request):
             if user.first_login:
 
                 return redirect('qrcode_login')
-            else:
-                return redirect('qrcode_auth')  
+            elif mudar_senha:
+                return render(request, 'qrcode_auth.html', {'email': email})
+            else: 
+                return redirect('qrcode_auth')
+
 
 def qrcode_auth(request):
     return render(request, 'qrcode_auth.html')
@@ -287,3 +299,28 @@ def esqueci_senha(request):
     if hasattr(request.user, 'usu_id'):
         return redirect('home_page/') 
     return render(request, 'esqueci_senha.html')
+
+
+def mudar_senha(request):
+    email = request.POST.get('email')
+    if email:
+        try:
+            user = Usuario.objects.filter(usu_email=email).first()
+            if user.key_auth:
+                return render(request,'qrcode_auth.html',{'email':user.usu_email})
+        except Exception as e:
+            return redirect('index')
+        
+
+def troca_senha(request):
+    email = request.POST.get('email')
+    password = request.POST.get('senha1')
+    usuario = Usuario.objects.filter(usu_email=email).first()
+
+    usuario.set_password(password)
+    usuario.save()
+    return redirect('/')
+
+def page_not_found_view(request, exception):
+    return redirect('/')
+

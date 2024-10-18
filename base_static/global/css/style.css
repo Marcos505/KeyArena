@@ -245,9 +245,27 @@ body {
   overflow-y: auto; /* Permitir rolagem apenas na área de conteúdo */
 }
 
-.modal-footer .btn {
-  flex: 1; /* Faz os botões ocuparem o mesmo espaço */
-  margin: 0.5rem; /* Adiciona um pequeno espaçamento entre os botões */
+.password-rules-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    width: 250px;
+    z-index: 1000;
+}
 
-  
+.password-rules-box p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.password-rules-box ul {
+    padding-left: 20px;
+}
+
+.password-rules-box ul li {
+    font-size: 14px;
 }

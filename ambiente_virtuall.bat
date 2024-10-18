@@ -19,7 +19,7 @@ call %VENV_DIR%\Scripts\activate
 REM Instalar os requisitos a partir do requirements.txt
 if exist requirements.txt (
     echo Instalando os requisitos do requirements.txt...
-    pip install -r requirements.txt
+    pip install -r requirements.txt --quiet
 ) else (
     echo Arquivo requirements.txt não encontrado!
 )
