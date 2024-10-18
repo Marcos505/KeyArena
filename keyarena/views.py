@@ -287,3 +287,12 @@ def esqueci_senha(request):
     if hasattr(request.user, 'usu_id'):
         return redirect('home_page/') 
     return render(request, 'esqueci_senha.html')
+
+
+def chaveamento(request, torneio_id):
+    torneio = Torneio.objects.get(tor_id=torneio_id)
+    editable = request.GET.get('editable', 'true') == 'true'
+
+    return render(request, 'inscricao.html',{
+        'torneio': torneio,
+        'editable': editable})

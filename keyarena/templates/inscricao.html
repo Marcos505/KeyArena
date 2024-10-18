@@ -13,14 +13,17 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+
         h2 {
             text-align: center;
         }
+
         #bracket {
             margin-top: 20px;
             display: flex;
             justify-content: center;
         }
+
         .input-container {
             text-align: center;
             margin-bottom: 20px;
@@ -32,13 +35,11 @@
     {% include 'components/navbar.html' %}
 
     <main class='content'>
-    <div class="container1">
-        <div class="content" id="content">
             <h1>{{ torneio.tor_nome_torneio }}!</h1>
             {% if mensagem %}
-                <h2> Você já está inscrito neste torneio!</h2>
+                <h2>Você já está inscrito neste torneio!</h2>
             {% else %}
-                <h2> Você se inscreveu neste torneio!</h2>
+                <h2>Você se inscreveu neste torneio!</h2>
             {% endif %}
 
             <h2>Chaveamento do Torneio</h2>
@@ -51,86 +52,100 @@
 
             <!-- Div onde o chaveamento será gerado -->
             <div id="bracket"></div>
-        </div>
-    </div>
-
     {% include 'components/footer.html' %}
 
     <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bracket/0.11.1/jquery.bracket.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+            $(document).ready(function () {
             const numPlayers = parseInt("{{ torneio.tor_quant_participantes }}");
             const bracketDiv = $('#bracket');
+            const editable = {{ editable|yesno:"true,false" }};
+                console.log(editable)
 
-            // Função para calcular a próxima potência de 2
-            function nextPowerOfTwo(num) {
-                let power = 1;
-                while (power < num) {
-                    power *= 2;
-                }
-                return power;
-            }
-
-            // Função para verificar se um número é potência de 2
-            function isPowerOfTwo(num) {
-                return (num & (num - 1)) === 0 && num > 0;
-            }
-
-            // Função para gerar as equipes
-            function generateTeams(numPlayers) {
-                const totalTeams = isPowerOfTwo(numPlayers) ? numPlayers : nextPowerOfTwo(numPlayers);
-                const teams = [];
-                
-                // Adiciona os jogadores reais
-                for (let i = 1; i <= numPlayers; i++) {
-                    teams.push([`Time ${i}`, ""]);  // Adiciona o time sem o segundo valor
+                function nextPowerOfTwo(num) {
+                    let power = 1;
+                    while (power < num) {
+                        power *= 2;
+                    }
+                    return power;
                 }
 
-                // Preenche com "Byes" até alcançar a potência de 2
-                const byesNeeded = totalTeams - numPlayers;
-                for (let i = 0; i < byesNeeded; i++) {
-                    teams.push([`Bye ${i + 1}`, "Bye"]);
+                function isPowerOfTwo(num) {
+                    return (num & (num - 1)) === 0 && num > 0;
                 }
 
-                // Agrupa os times em pares
-                const pairedTeams = [];
-                for (let i = 0; i < teams.length; i += 2) {
-                    const first = teams[i];
-                    const second = teams[i + 1] || ["Bye", "Bye"]; // Se não houver segundo, adiciona Bye
-                    pairedTeams.push([first[0], second[0]]);
+                function generateTeams(numPlayers) {
+                    const totalTeams = isPowerOfTwo(numPlayers) ? numPlayers : nextPowerOfTwo(numPlayers);
+                    const teams = [];
+
+                    for (let i = 1; i <= numPlayers; i++) {
+                        teams.push([`Time ${i}`, ""]);
+                    }
+
+                    const byesNeeded = totalTeams - numPlayers;
+                    for (let i = 0; i < byesNeeded; i++) {
+                        teams.push([`Bye ${i + 1}`, "Bye"]);
+                    }
+
+                    const pairedTeams = [];
+                    for (let i = 0; i < teams.length; i += 2) {
+                        const first = teams[i];
+                        const second = teams[i + 1] || ["Bye", "Bye"];
+                        pairedTeams.push([first[0], second[0]]);
+                    }
+
+                    return pairedTeams;
                 }
 
-                return pairedTeams;
-            }
+                const teams = generateTeams(numPlayers);
+                const data = { teams: teams, results: [] };
 
-            // Gerando os dados de times
-            const teams = generateTeams(numPlayers);
+                bracketDiv.bracket({
+                    init: data,
+                    save: function() {},
+                    disableToolbar: true,
+                    disableTeamEdit: true,
+                    centerConnectors: true,
+                });
+                function disableScoreEditing() {
+                    $('.score.editable').each(function () {
+                        $(this).off('click');
+                        $(this).css({
+                            'pointer-events': 'none',
+                            'background-color': '#f0f0f0'
+                        });
+                    });
+                }
+                function enableScoreEditing() {
+                    $('.score.editable').each(function () {
+                        $(this).on('click', function () {
+                            // Código para editar o placar
+                        });
+                        $(this).css({
+                            'pointer-events': 'auto',
+                            'background-color': '' // Resetar para o estilo original
+                        });
+                    });
+                }
+                if (editable) {
+                    enableScoreEditing(); // Habilita a edição se permitido
+                } else {
+                    disableScoreEditing(); // Desabilita a edição se não permitido
+                }
 
-            // Configurando os dados para o bracket
-            const data = {
-                teams: teams,
-                results: []  // Resultados podem ser adicionados dinamicamente aqui
-            };
-
-            // Inicializando o bracket com os dados fornecidos
-            bracketDiv.empty();  // Limpa o bracket anterior
-            bracketDiv.bracket({
-                init: data,
-                save: function() {},
-                disableToolbar: true,
-                disableTeamEdit: true,
-                centerConnectors: true,
             });
-        });
-    </script>
+            
+        </script>
 
-    {% else %}
+        {% else %}
         <p>Chaveamento não disponível para este tipo de torneio.</p>
-    {% endif %}
+        {% endif %}
         </div>
     </div>
 

@@ -50,8 +50,12 @@
                                 </button>
                             </td>
                             <td>
-                                <button class="btn btn-success">Chaveamento</button>
+                                <a href="{% url 'chaveamento' torneio.tor_id %}?editable=true" class="btn btn-success" role="button">
+                                    Chaveamento
+                                </a>
                             </td>
+                            
+                            
                         </tr>
                         <div class="modal fade" id="descriptionModal{{ torneio.tor_id }}" tabindex="-1"
                             aria-labelledby="descriptionModal{{ torneio.tor_id }}Label" aria-hidden="true">
@@ -105,10 +109,9 @@
                                 </button>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-dark" data-bs-toggle="modal"
-                                    data-bs-target="#descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}">
-                                    Chaveamento
-                                </button>
+                                <a href="{% url 'chaveamento' inscricao.ins_tor_torneios.tor_id %}?editable=false" class="btn btn-dark" role="button">
+                                    Ver Chaveamento
+                                </a>
                             </td>
                         </tr>
                         <div class="modal fade" id="descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}"
