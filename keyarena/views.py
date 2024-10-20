@@ -14,8 +14,6 @@ from django.views.decorators.cache import never_cache
 from django.db.models import Count
 
 
-from keyarena import models
-
 def index(request):
     if hasattr(request.user, 'usu_id'):
         return redirect('home_page/') 
@@ -190,6 +188,10 @@ def inscricao(request, torneio_id):
     torneio = Torneio.objects.get(tor_id=torneio_id)
     num_participantes = torneio.tor_quant_participantes
 
+    inscricoes = InscricaoTorneio.objects.filter(ins_tor_torneios=torneio)
+    participantes = [ins.ins_usu_participante.usu_nome_completo for ins in inscricoes]
+
+
     if request.method == 'POST':
         inscricao_existente = InscricaoTorneio.objects.filter(
             ins_usu_participante=request.user,
@@ -200,6 +202,7 @@ def inscricao(request, torneio_id):
             
             return render(request, 'inscricao.html', {
                 'torneio': torneio,
+                'participantes': participantes,
                 'mensagem': 'Você já está inscrito neste torneio.'
             })
 
@@ -210,11 +213,13 @@ def inscricao(request, torneio_id):
 
         return render(request, 'inscricao.html', {
             'torneio': torneio,
-            'quant_participantes':num_participantes })
+            'quant_participantes':num_participantes,
+            'participantes': participantes })
 
     return render(request, 'participar.html', 
         {'torneio': torneio,
-        'quant_participantes': num_participantes })
+        'quant_participantes': num_participantes,
+        'participantes': participantes })
 
 @never_cache
 @login_required
