@@ -34,7 +34,9 @@
                     <tr>
                         <td>{{ torneio.tor_nome_torneio }}</td>
                         <td>{{ torneio.tor_tipo_torneio.ttor_tipo }}</td>
-                        <td>{{ torneio.tor_quant_participantes }}</td>
+                        <td>
+                                 ({{ torneio.num_inscritos }} / {{ torneio.tor_quant_participantes }})
+                        </td>
                         <td>
                         {% if torneio.tor_ativo %}
                             Ativo

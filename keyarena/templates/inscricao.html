@@ -62,87 +62,93 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bracket/0.11.1/jquery.bracket.min.js"></script>
 
     <script>
-            $(document).ready(function () {
-            const numPlayers = parseInt("{{ torneio.tor_quant_participantes }}");
+        $(document).ready(function () {
+            const maxParticipantes = parseInt("{{ torneio.tor_quant_participantes }}");
             const bracketDiv = $('#bracket');
+            const inscritos = {{ participantes|safe }}; // Ex: ["Usuário 1", "Usuário 2"]
             const editable = {{ editable|yesno:"true,false" }};
-                console.log(editable)
-
-                function nextPowerOfTwo(num) {
-                    let power = 1;
-                    while (power < num) {
-                        power *= 2;
-                    }
-                    return power;
+            console.log(editable);
+    
+            function nextPowerOfTwo(num) {
+                let power = 1;
+                while (power < num) {
+                    power *= 2;
                 }
-
-                function isPowerOfTwo(num) {
-                    return (num & (num - 1)) === 0 && num > 0;
-                }
-
-                function generateTeams(numPlayers) {
-                    const totalTeams = isPowerOfTwo(numPlayers) ? numPlayers : nextPowerOfTwo(numPlayers);
-                    const teams = [];
-
-                    for (let i = 1; i <= numPlayers; i++) {
-                        teams.push([`Time ${i}`, ""]);
-                    }
-
-                    const byesNeeded = totalTeams - numPlayers;
-                    for (let i = 0; i < byesNeeded; i++) {
-                        teams.push([`Bye ${i + 1}`, "Bye"]);
-                    }
-
-                    const pairedTeams = [];
-                    for (let i = 0; i < teams.length; i += 2) {
-                        const first = teams[i];
-                        const second = teams[i + 1] || ["Bye", "Bye"];
-                        pairedTeams.push([first[0], second[0]]);
-                    }
-
-                    return pairedTeams;
-                }
-
-                const teams = generateTeams(numPlayers);
-                const data = { teams: teams, results: [] };
-
-                bracketDiv.bracket({
-                    init: data,
-                    save: function() {},
-                    disableToolbar: true,
-                    disableTeamEdit: true,
-                    centerConnectors: true,
+                return power;
+            }
+    
+            function generateTeams(inscritos) {
+                const totalInscritos = inscritos.length;
+                const totalTeams = nextPowerOfTwo(maxParticipantes); // Próxima potência de 2
+                const teams = [];
+    
+                // 1. Adiciona os inscritos
+                inscritos.forEach(participante => {
+                    teams.push([participante, ""]);
                 });
-                function disableScoreEditing() {
-                    $('.score.editable').each(function () {
-                        $(this).off('click');
-                        $(this).css({
-                            'pointer-events': 'none',
-                            'background-color': '#f0f0f0'
-                        });
-                    });
+    
+                // 2. Preenche os slots restantes com "Jogador (i)"
+                const remainingSlots = totalTeams - totalInscritos;
+                for (let i = 0; i < remainingSlots; i++) {
+                    if (i === remainingSlots - 1 && remainingSlots > 0) {
+                        // Se for o último slot a ser preenchido, adicione um bye
+                        teams.push([`Bye`, "Bye"]);
+                    } else {
+                        teams.push([`Jogador ${totalInscritos + i + 1}`, ""]);
+                    }
                 }
-                function enableScoreEditing() {
-                    $('.score.editable').each(function () {
-                        $(this).on('click', function () {
-                            // Código para editar o placar
-                        });
-                        $(this).css({
-                            'pointer-events': 'auto',
-                            'background-color': '' // Resetar para o estilo original
-                        });
-                    });
+    
+                // Emparelha os times
+                const pairedTeams = [];
+                while (teams.length) {
+                    const first = teams.shift() || ["Empty", "Empty"];
+                    const second = teams.shift() || ["Empty", "Empty"];
+                    pairedTeams.push([first[0] || "Empty", second[0] || "Empty"]);
                 }
-                if (editable) {
-                    enableScoreEditing(); // Habilita a edição se permitido
-                } else {
-                    disableScoreEditing(); // Desabilita a edição se não permitido
-                }
-
+    
+                return pairedTeams;
+            }
+    
+            const teams = generateTeams(inscritos);
+            const data = { teams: teams, results: [] };
+    
+            bracketDiv.bracket({
+                init: data,
+                save: function() {},
+                disableToolbar: true,
+                disableTeamEdit: true,
+                centerConnectors: true,
             });
-            
-        </script>
-
+    
+            function disableScoreEditing() {
+                $('.score.editable').each(function () {
+                    $(this).off('click');
+                    $(this).css({
+                        'pointer-events': 'none',
+                        'background-color': '#f0f0f0'
+                    });
+                });
+            }
+    
+            function enableScoreEditing() {
+                $('.score.editable').each(function () {
+                    $(this).on('click', function () {
+                        // Código para editar o placar
+                    });
+                    $(this).css({
+                        'pointer-events': 'auto',
+                        'background-color': '' // Resetar para o estilo original
+                    });
+                });
+            }
+    
+            if (editable) {
+                enableScoreEditing(); // Habilita a edição se permitido
+            } else {
+                disableScoreEditing(); // Desabilita a edição se não permitido
+            }
+        });
+    </script>
         {% else %}
         <p>Chaveamento não disponível para este tipo de torneio.</p>
         {% endif %}

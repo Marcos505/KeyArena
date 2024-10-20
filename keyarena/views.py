@@ -11,6 +11,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
+from django.db.models import Count
+
+
+from keyarena import models
 
 def index(request):
     if hasattr(request.user, 'usu_id'):
@@ -166,7 +170,7 @@ def perfil(request):
 @login_required
 def participar(request):
     usuario = request.user.id 
-    torneios = Torneio.objects.exclude(tor_usu_criador_id=usuario)
+    torneios = Torneio.objects.exclude(tor_usu_criador_id=usuario).annotate(num_inscritos=Count('inscricaotorneio'))
     inscricoes = InscricaoTorneio.objects.filter(ins_usu_participante=usuario)  
     inscricoes_dict = {ins.ins_tor_torneios.tor_id: ins for ins in inscricoes}
 
@@ -330,6 +334,10 @@ def chaveamento(request, torneio_id):
     torneio = Torneio.objects.get(tor_id=torneio_id)
     editable = request.GET.get('editable', 'true') == 'true'
 
+    inscricoes = InscricaoTorneio.objects.filter(ins_tor_torneios=torneio)
+    participantes = [ins.ins_usu_participante.usu_nome_completo for ins in inscricoes]
+
     return render(request, 'inscricao.html',{
         'torneio': torneio,
-        'editable': editable})
+        'editable': editable,
+        'participantes': participantes,})
