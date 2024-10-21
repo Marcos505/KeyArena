@@ -19,8 +19,9 @@
             </div>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="avatarDropdown">
                 {% if request.user.is_authenticated %}
-                    <li><a class="dropdown-item" onclick="location.href='/perfil'">Profile</a></li>
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" onclick="location.href='/home_page/'">Menu Principal</a></li>
+                    <li><a class="dropdown-item" onclick="location.href='/perfil'">Perfil</a></li>
+                    <li><a class="dropdown-item" href="#">Configurações</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li>
                         <a class="dropdown-item flex-fill me-2" data-bs-toggle="modal" data-bs-target="#exitModal">Sair do Sistema</a>

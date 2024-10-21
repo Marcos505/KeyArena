@@ -45,13 +45,33 @@
             <h2>Chaveamento do Torneio</h2>
 
             {% if torneio.tor_tipo_torneio.ttor_tipo == "Single Elimination" %}
-
             <div class="input-container">
                 <p>Número de Jogadores: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
             </div>
-
-            <!-- Div onde o chaveamento será gerado -->
             <div id="bracket"></div>
+
+            {% elif torneio.tor_tipo_torneio.ttor_tipo == "Double Elimination" %}
+            <div class="input-container">
+                <p>Número de Jogadores: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
+            </div>
+            <div id="bracket-double"></div>
+
+            {% elif torneio.tor_tipo_torneio.ttor_tipo == "Swiss" %}
+            <div class="input-container">
+                <p>Número de Jogadores: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
+            </div>
+            <div id="bracket-swiss"></div>
+
+            {% elif torneio.tor_tipo_torneio.ttor_tipo == "Round Robin" %}
+            <div class="input-container">
+                <p>Número de Jogadores: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
+            </div>
+            <div id="bracket-round-robin"></div>
+
+            {% else %}
+            <p>Chaveamento não disponível para este tipo de torneio.</p>
+            {% endif %}
+
     {% include 'components/footer.html' %}
 
     <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
@@ -149,12 +169,6 @@
             }
         });
     </script>
-        {% else %}
-        <p>Chaveamento não disponível para este tipo de torneio.</p>
-        {% endif %}
-        </div>
-    </div>
-
     {% include 'components/footer.html' %}
     
     <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
