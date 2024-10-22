@@ -54,25 +54,25 @@
             <div class="input-container">
                 <p>Número de Jogadores: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
             </div>
-            <div id="bracket-double"></div>
+            <div id="bracket"></div>
 
             {% elif torneio.tor_tipo_torneio.ttor_tipo == "Swiss" %}
             <div class="input-container">
                 <p>Número de Jogadores: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
             </div>
-            <div id="bracket-swiss"></div>
+            <div id="bracket"></div>
 
             {% elif torneio.tor_tipo_torneio.ttor_tipo == "Round Robin" %}
             <div class="input-container">
                 <p>Número de Jogadores: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
             </div>
-            <div id="bracket-round-robin"></div>
+            <div id="bracket"></div>
 
             {% else %}
             <p>Chaveamento não disponível para este tipo de torneio.</p>
             {% endif %}
 
-    {% include 'components/footer.html' %}
+
 
     <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -87,8 +87,7 @@
             const bracketDiv = $('#bracket');
             const inscritos = {{ participantes|safe }}; // Ex: ["Usuário 1", "Usuário 2"]
             const editable = {{ editable|yesno:"true,false" }};
-            console.log(editable);
-    
+
             function nextPowerOfTwo(num) {
                 let power = 1;
                 while (power < num) {
@@ -107,14 +106,16 @@
                     teams.push([participante, ""]);
                 });
     
-                // 2. Preenche os slots restantes com "Jogador (i)"
+                // 2. Preenche os slots restantes
                 const remainingSlots = totalTeams - totalInscritos;
                 for (let i = 0; i < remainingSlots; i++) {
-                    if (i === remainingSlots - 1 && remainingSlots > 0) {
-                        // Se for o último slot a ser preenchido, adicione um bye
-                        teams.push([`Bye`, "Bye"]);
-                    } else {
-                        teams.push([`Jogador ${totalInscritos + i + 1}`, ""]);
+                    if (totalInscritos < totalTeams) {
+                        // Adiciona "Bye" apenas se houver slots restantes e o número de inscritos for ímpar
+                        if (remainingSlots > 0 && totalInscritos + i === totalTeams - 1 && totalInscritos % 2 === 1) {
+                            teams.push(["Bye", "Bye"]);
+                        } else {
+                            teams.push([`Jogador ${totalInscritos + i + 1}`, ""]);
+                        }
                     }
                 }
     
@@ -131,14 +132,33 @@
     
             const teams = generateTeams(inscritos);
             const data = { teams: teams, results: [] };
-    
+
+            const tournamentType = "{{ torneio.tor_tipo_torneio.ttor_tipo }}"
+
+            function onTournamentTypeLoaded(tournamentType) {
+                const isDoubleElimination = tournamentType === "Double Elimination";
+
+                if (isDoubleElimination) {
+                    $('.doubleElimination').trigger('click'); // Aciona automaticamente a opção "de"
+                    $('.increment').hide(); // Esconde o botão "+"
+                    $('.decrement').hide(); // Esconde o botão "-"
+                    $('.doubleElimination').hide(); // Esconde o botão de Eliminação Dupla
+                    $('.singleElimination').hide(); // Esconde o botão de Eliminação Dupla
+                    console.log('foi')
+                    
+                }
+            }
+            
             bracketDiv.bracket({
                 init: data,
                 save: function() {},
-                disableToolbar: true,
-                disableTeamEdit: true,
+                disableToolbar: tournamentType !== "Double Elimination",
+                disableTeamEdit: tournamentType !== "Double Elimination",
                 centerConnectors: true,
+
             });
+
+            onTournamentTypeLoaded(tournamentType);
     
             function disableScoreEditing() {
                 $('.score.editable').each(function () {
