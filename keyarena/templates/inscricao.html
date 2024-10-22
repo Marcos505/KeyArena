@@ -95,14 +95,25 @@
                 }
                 return power;
             }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]]; // Troca elementos(Sorteio)
+                }
+                return array;
+            }
     
             function generateTeams(inscritos) {
                 const totalInscritos = inscritos.length;
                 const totalTeams = nextPowerOfTwo(maxParticipantes); // Próxima potência de 2
                 const teams = [];
+
+                // Embaralha os inscritos
+                const shuffledInscritos = shuffleArray(inscritos.slice());
     
-                // 1. Adiciona os inscritos
-                inscritos.forEach(participante => {
+                // 1. Adiciona os inscritos embaralhados
+                shuffledInscritos.forEach(participante => {
                     teams.push([participante, ""]);
                 });
     
