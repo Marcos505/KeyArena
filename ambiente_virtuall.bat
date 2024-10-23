@@ -24,4 +24,7 @@ if exist requirements.txt (
     echo Arquivo requirements.txt não encontrado!
 )
 
-echo Processo concluído.
+echo Processo finalizado.
+
+REM Pausar por 2 segundos antes de fechar
+timeout /t 2 /nobreak >nul
