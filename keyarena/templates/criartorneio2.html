@@ -4,60 +4,64 @@
     {% load static %}
     {% include 'components/head.html' with title='KeyArena' %}    
     <link rel="stylesheet" href="{% static 'global/css/style_criartorneio.css' %}">
-  </head>
-  <body>
+</head>
+<body>
     {% include 'components/navbar.html' %}
     <main class='content'>
-    <div class="form-container">
-      <h1>Crie seu torneio</h1>
-      <form method="POST" action="{% url 'salvar_torneio2' %}">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="start-date">Data de início do torneio</label>
-          <input 
-            type="date" 
-            id="start-date" 
-            name="start-date" 
-            required
-          />
+        <div class="form-container">
+            <h1>Crie seu torneio</h1>
+            <form method="POST" action="{% url 'salvar_torneio2' %}" onsubmit="return validateDates()">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="start-date">Data de início do torneio</label>
+                    <input type="date" id="start-date" name="start-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="registration-start">Data de início de inscrição</label>
+                    <input type="date" id="registration-start" name="registration-start" required>
+                </div>
+                <div class="form-group">
+                    <label for="registration-end">Data de fim de inscrição</label>
+                    <input type="date" id="registration-end" name="registration-end" required>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-success" type="submit">Concluir</button>
+                    <button class="btn btn-danger" type="button" onclick="history.back()">Voltar</button>
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-          <label for="registration-start">Data de início de inscrição</label>
-          <input
-            type="date"
-            id="registration-start"
-            name="registration-start"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="registration-end">Data de fim de inscrição</label>
-          <input 
-            type="date" 
-            id="registration-end" 
-            name="registration-end"
-            required
-          />
-        </div>
-        <div class="button-group">
-          <button  class="btn btn-success" type="submit">Concluir</button>
-          <button  class="btn btn-danger" type="button" onclick="history.back()">Voltar</button>
+    </main>
+    {% include 'components/footer.html' %}
 
+    <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-        </div>
-      </form>
-    </div>
-  </main>
-  {% include 'components/footer.html' %}
-    <script
-      src="https://kit.fontawesome.com/eb67357ef4.js"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
-  
-  </body>
+    <script>
+        function validateDates() {
+            const startDate = new Date(document.getElementById('start-date').value);
+            const registrationStart = new Date(document.getElementById('registration-start').value);
+            const registrationEnd = new Date(document.getElementById('registration-end').value);
+
+            // Verifica se a data de início das inscrições é depois da data de término das inscrições
+            if (registrationStart > registrationEnd) {
+                alert("A data de início das inscrições não pode ser posterior à data de término das inscrições.");
+                return false;
+            }
+
+            // Verifica se a data de início do torneio é antes da data de início das inscrições
+            if (startDate < registrationStart) {
+                alert("A data de início do torneio não pode ser antes da data de início das inscrições.");
+                return false;
+            }
+
+            // Verifica se a data de término das inscrições é depois da data de início do torneio
+            if (registrationEnd > startDate) {
+                alert("A data de fim das inscrições não pode ser posterior à data de início do torneio.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
 </html>
