@@ -327,12 +327,23 @@ def page_not_found_view(request, exception):
 
 def chaveamento(request, torneio_id):
     torneio = Torneio.objects.get(tor_id=torneio_id)
+    id_de_torneio = torneio.tor_tipo_torneio_id
     editable = request.GET.get('editable', 'true') == 'true'
 
     inscricoes = InscricaoTorneio.objects.filter(ins_tor_torneios=torneio)
     participantes = [ins.ins_usu_participante.usu_nome_completo for ins in inscricoes]
+    
+    if id_de_torneio == 1:
+        return render(request, 'suico.html',{
+            'torneio': torneio,
+            'editable': editable,
+            'participantes': participantes,})
+    else:
+        return render(request, 'inscricao.html',{
+            'torneio': torneio,
+            'editable': editable,
+            'participantes': participantes,})
+    
 
-    return render(request, 'inscricao.html',{
-        'torneio': torneio,
-        'editable': editable,
-        'participantes': participantes,})
+def suico(request):
+    return render(request,"suico.html")

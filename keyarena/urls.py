@@ -25,7 +25,8 @@ urlpatterns = [
     path('esqueci_senha/', views.esqueci_senha, name='esqueci_senha'),
     path('mudar_senha/', views.mudar_senha, name='mudar_senha'),
     path('troca_senha/', views.troca_senha, name='troca_senha'),
-    path('validacao_otp/', views.validacao_otp, name='validacao_otp')
+    path('validacao_otp/', views.validacao_otp, name='validacao_otp'),
+    path('suico/', views.suico, name='suico')
 ]
 
 if settings.DEBUG:
