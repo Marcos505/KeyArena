@@ -80,12 +80,8 @@ DATABASES = {
         'NAME': 'KeyArenaData',
         'USER': 'postgres',
         'PASSWORD': 'root',
-<<<<<<< Updated upstream
-        'HOST': 'localhost'
-=======
         'HOST': 'postgres',
         'PORT': '5432'
->>>>>>> Stashed changes
     }
 }
 
