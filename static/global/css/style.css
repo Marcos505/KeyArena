@@ -1,0 +1,271 @@
+/* Estilos personalizados */
+
+.custom-icon {
+  font-size: 2rem;
+  /* Aumenta o tamanho do ícone */
+  color: #ffd700;
+  /* Muda a cor do ícone (dourado) */
+}
+
+.icon1 {
+  /* Aumenta o tamanho do ícone */
+  color: #ffd700;
+  /* Muda a cor do ícone (dourado) */
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  background-color: #ccc;
+  background-size: cover;
+  background-position: center;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Ajusta a imagem para preencher o contêiner */
+}
+
+.bg-image {
+  background: linear-gradient(
+      to bottom,
+      rgba(160, 138, 138, 0.6),
+      rgba(255, 255, 255, 1)
+    ),
+    url("https://th.bing.com/th/id/R.edddf3df374a6002cd254e5f6f80bc59?rik=O0angB4L0sjzxQ&riu=http%3a%2f%2fi.imgur.com%2fqmd7dZc.jpg&ehk=261VPgCJzL8s4gTUSBi3hv7ID4uMftK48p2inXnrtGs%3d&risl=&pid=ImgRaw&r=0");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Página de cadastro */
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background: #000000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.form-box h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.card-body {
+  height: 100%;
+}
+
+.container1 {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.table-container {
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 60%;
+  position: relative;
+}
+
+.description-box {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tournament-row:hover ~ #description-box {
+  display: block;
+}
+
+
+
+.container-fluid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+
+
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Ajustes no dropdown */
+.dropdown-menu-end {
+  right: 0;
+  left: auto;
+}
+
+.dropdown-item {
+  font-size: 1rem;
+}
+
+.btn-hover:hover{
+  background-color: #212529;
+}
+
+.form-login{
+  background-color:rgb(0, 0, 0)
+}
+
+a,.dropdown {
+  cursor: pointer;
+}
+
+.qrcode_login {
+  max-width: 80%; /* A imagem ocupará no máximo 80% da largura do contêiner */
+  height: 40%; /* Mantém a proporção da imagem */
+  margin: 0; /* Adiciona margem vertical */
+}
+
+.content_qrcode {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* Centraliza horizontalmente */
+  height: calc(100vh - 56px - 50px); /* Altura total da viewport menos a altura da navbar e footer */
+  padding: 20px; /* Adiciona um pouco de espaçamento */
+  box-sizing: border-box; /* Inclui o padding na largura total */
+  overflow: hidden; /* Esconde o conteúdo que ultrapassa o contêiner */
+  margin-top: 0;
+}
+
+
+.info {
+  text-align: center; /* Centraliza o texto dentro da div de info */
+  max-width: 600px; /* Limita a largura do texto */
+  font-size: 1rem; /* Tamanho base da fonte */
+  line-height: 1.5; /* Aumenta o espaçamento entre linhas */
+}
+
+@media (max-width: 768px) {
+  .content_qrcode {
+    height: auto; /* Permite que a altura se ajuste conforme necessário em telas menores */
+    padding: 10px; /* Diminui o padding em telas menores */
+  }
+
+  .qrcode_login {
+    max-width: 100%; /* A imagem ocupará 100% em telas menores */
+  }
+
+  .info {
+    font-size: 0.9rem; /* Diminui o tamanho da fonte em telas menores */
+    padding: 0 10px; /* Adiciona padding lateral para evitar que o texto fique muito próximo das bordas */
+  }
+}
+
+@media (max-width: 480px) {
+  .info {
+    font-size: 12px; /* Diminui ainda mais o tamanho da fonte em telas muito pequenas */
+  }
+}
+
+.btn{
+  border: none;
+}
+
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  height: 80px;
+  background-color: #212529;
+  padding: 0.5rem 1rem;
+  z-index: 1000; /* Certifique-se de que ela está acima de outros elementos */
+}
+
+/* Para centralizar a logo e o ícone */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-brand i {
+  font-size: 1.5rem;
+}
+
+.footer {
+  background-color: #212529;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.content {
+  margin-top: 80px; /* Altura da navbar */
+  margin-bottom: 100px; /* Espaço para o footer fixo */
+  padding: 20px;
+  height: calc(100vh - 180px); /* Altura da viewport menos navbar e footer */
+  overflow-y: auto; /* Permitir rolagem apenas na área de conteúdo */
+}
+
+.password-rules-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    width: 250px;
+    z-index: 1000;
+}
+
+.password-rules-box p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.password-rules-box ul {
+    padding-left: 20px;
+}
+
+.password-rules-box ul li {
+    font-size: 14px;
+}

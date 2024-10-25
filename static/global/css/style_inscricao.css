@@ -1,0 +1,48 @@
+
+
+.sidebar {
+    width: 200px;
+    background-color: #f4f4f4;
+    padding: 15px;
+    height: 100%; /* A sidebar ocupa toda a altura do container */
+    position: fixed; /* Fixa a barra lateral */
+    left: -200px; /* Inicialmente fora da tela */
+    transition: left 0.3s;
+}
+
+.sidebar.active {
+    left: 0; /* Move a barra lateral para dentro da tela */
+}
+
+.sidebar h2 {
+    margin-top: 0;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.sidebar ul li a:hover {
+    color: #007bff; /* Cor ao passar o mouse */
+}
+
+
+.menu-area {
+    width: 100px; /* Largura da área que ativa a barra lateral */
+    height: 70vh; /* Altura total da página */
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: transparent; /* Área invisível */
+    z-index: 1; /* Coloca acima do conteúdo */
+}

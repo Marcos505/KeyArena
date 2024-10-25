@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-i0tz%814m83=9x_=r=5@tb2cdkfnpt6o5w2%31=k!q$-!yyi)q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -80,9 +80,25 @@ DATABASES = {
         'NAME': 'KeyArenaData',
         'USER': 'postgres',
         'PASSWORD': 'root',
+<<<<<<< Updated upstream
         'HOST': 'localhost'
+=======
+        'HOST': 'postgres',
+        'PORT': '5432'
+>>>>>>> Stashed changes
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('DATABASE_ENGINE'),
+#         'NAME': os.getenv('DATABASE_NAME'),
+#         'USER': os.getenv('DATABASE_USER'),
+#         'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+#         'HOST': os.getenv('DATABASE_HOST'),
+#         'PORT': os.getenv('DATABASE_PORT'),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
