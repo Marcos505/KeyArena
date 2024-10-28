@@ -1,26 +1,4 @@
 services:
-  postgres:
-    image: postgres
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=KeyArenaData
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --locale=en_US.UTF-8 
-    restart: always
-    ports:
-      - 5432:5432
-    networks:
-      - keyarena-intra
-    deploy:
-      resources:
-        limits:
-          cpus: "4.0"
-          memory: 2G
-        reservations:
-          memory: 1G #tirar postgres
-
   django:
     image: python:3.12.0-slim
     volumes:
@@ -30,8 +8,7 @@ services:
     command: bash -c "apt update; apt install libpq-dev python3-dev build-essential -y ; python -m venv /app/venv && /app/venv/bin/pip install --upgrade pip setuptools && /app/venv/bin/pip install -r requirements.txt && /app/venv/bin/python manage.py migrate && /app/venv/bin/python manage.py collectstatic --noinput && /app/venv/bin/python manage.py runserver 0.0.0.0:8000"
     environment:
       - DATABASE_URL=postgres://postgres:root@postgres:3036/KeyArenaData
-    depends_on:
-      - postgres #tirar postgres
+
     restart: always
     networks:
       - keyarena-intra
@@ -53,8 +30,9 @@ services:
       - keyarena-intra
 
 volumes: #tirar postgres
-  postgres-data:
   venv:
 
 networks:
   keyarena-intra:
+    driver: bridge
+    name: keyarena-intra  # Nome personalizado
