@@ -60,10 +60,12 @@
                         </td>
                         <td>{{ torneio.tor_data_inicio|date:"d/m/Y" }}</td>
                         <td>
-
+                            <div class="d-flex justify-content-around pb-2">
                             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ torneio.tor_id }}">Detalhes</button>
+                            </div>
                         </td>
                         <td>
+                            <div class="d-flex justify-content-around pb-2">
                             {% if torneio.tor_id not in inscricoes_dict %}
                                 {% if torneio.num_inscritos < torneio.tor_quant_participantes %}
                                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#participateModal{{ torneio.tor_id }}">Participar</button>
@@ -73,8 +75,9 @@
                             {% else %}
                                 <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#alreadyRegisteredModal{{ torneio.tor_id }}">Já Inscrito</button>
                             {% endif %}
+                        </div>
                         </td>
-                        
+                    
                     </tr>
 
                     <!-- Modal para Detalhes -->

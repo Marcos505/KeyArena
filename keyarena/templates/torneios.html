@@ -44,15 +44,19 @@
                             </td>
                             <td>{{ torneio.tor_data_inicio|date:"d/m/Y" }}</td>
                             <td>
+                                <div class="d-flex justify-content-around pb-2">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#descriptionModal{{ torneio.tor_id }}">
                                     Descrição
                                 </button>
+                                </div>
                             </td>
                             <td>
+                                <div class="d-flex justify-content-around pb-2">
                                 <a href="{% url 'chaveamento' torneio.tor_id %}?editable=true" class="btn btn-success" role="button">
                                     Chaveamento
                                 </a>
+                               </div>
                             </td>
                             
                             
