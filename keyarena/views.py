@@ -199,14 +199,14 @@ def inscricao(request, torneio_id):
         ).first()
 
         if inscricao_existente:
-            
+    
             return redirect('participar')
 
         inscricao = InscricaoTorneio()
         inscricao.ins_tor_torneios = torneio
         inscricao.ins_usu_participante = request.user 
         inscricao.save() 
-
+        messages.success(request, 'Inscrição realizada com sucesso!')
         return redirect('participar')
 
     return redirect('participar')

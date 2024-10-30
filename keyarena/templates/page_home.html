@@ -25,10 +25,31 @@
       
 
       </div>
+      {% if messages %}
+        <div id="message-container" class="pt-5">
+          {% for message in messages %}
+            <div class="{% if message.tags %}alert alert-{{ message.tags }}{% endif %}">
+                 {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
     </main>
 
     {% include 'components/footer.html' %}
 
+    <script>
+      // Define um tempo (em milissegundos) após o qual a mensagem desaparecerá
+      setTimeout(function() {
+          // Seleciona o contêiner das mensagens e o esconde
+          const messageContainer = document.getElementById('message-container');
+          if (messageContainer) {
+              messageContainer.style.display = 'none';
+          }
+      }, 5000); // 5000ms = 5 segundos
+   </script>
+   
     <script
       src="https://kit.fontawesome.com/eb67357ef4.js"
       crossorigin="anonymous"

@@ -12,6 +12,20 @@
 
 
 <main class='content'>
+    {% if messages %}
+    <div id="message-container">
+        <div class="row justify-content-center">
+            <div class="col-md-6"> <!-- Ajuste a largura usando as colunas do Bootstrap -->
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+   {% endif %}
+
 
     <div class="container1">
         <div class="table-container">
@@ -135,6 +149,16 @@
 
     {% include 'components/footer.html' %}
 
+    <script>
+        // Define um tempo (em milissegundos) após o qual a mensagem desaparecerá
+        setTimeout(function() {
+            // Seleciona o contêiner das mensagens e o esconde
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                messageContainer.style.display = 'none';
+            }
+        }, 5000); // 5000ms = 5 segundos
+     </script>
     <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
