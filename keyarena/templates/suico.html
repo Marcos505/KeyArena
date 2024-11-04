@@ -7,15 +7,54 @@
     <style>
         /* Estilo de borda verde para os vencedores */
         .winner {
-            background-color:  green;
+            background-color: green;
             padding: 3px;
-            
         }
+
+        .match-container {
+        display: flex;
+        align-items: center; /* Alinha verticalmente os itens */
+        justify-content: center; /* Centraliza os itens */
+        gap: 10px; /* Espaço entre os elementos */
+    }
+
+    /* Container para cada equipe */
+    .team {
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Espaço entre nome e input */
+    }
+
+    .team-name {
+        display: inline-block;
+        width: 150px; /* Ajuste este valor conforme necessário */
+        white-space: nowrap; /* Evita quebra de linha */
+        overflow: hidden;
+        text-overflow: ellipsis; /* Adiciona reticências se o nome for muito longo */
+    }
+
+    /* Estilo do input de pontuação */
+    .score-input {
+        width: 50px;
+        text-align: center; /* Centraliza o texto do input */
+    }
+
+    /* Estilo do texto "vs" */
+    .versus {
+        margin: 0 5px;
+        font-weight: bold;
+    }
     </style>
 </head>
 <body>   
     {% include 'components/navbar.html' %}
-    
+
+    <h1 class="pt-5">{{ torneio.tor_nome_torneio }}!</h1>
+            {% if mensagem %}
+                <h2>Você já está inscrito neste torneio!</h2>
+            {% else %}
+                <h2>Você se inscreveu neste torneio!</h2>
+            {% endif %}
     <div class="tournament-container">
         <div class="input-container">
             <p id="num-participants" data-value="{{ torneio.tor_quant_participantes }}">Número de Participantes: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
@@ -29,8 +68,10 @@
             <ul id="team-results"></ul>
         </div>
     </div>
-
     <script>
+        // Supondo que `inscritos` é uma lista de objetos `{ name: "Nome do Participante" }` passada do backend.
+        
+        const inscritos = {{ participantes|safe }} || [];
         let teams = [];
         let currentRound = 0;
         let winners = [];
@@ -38,46 +79,47 @@
         let matchHistory = [];
 
         document.addEventListener("DOMContentLoaded", function() {
-            startTournament();
-        });
+    startTournament();
+});
 
-        function startTournament() {
-            const numParticipants = parseInt(document.getElementById('num-participants').getAttribute('data-value'));
-            if (numParticipants < 2 || isNaN(numParticipants)) {
-                alert('O número de participantes deve ser pelo menos 2.');
-                return;
-            }
+function startTournament() {
+    const numParticipants = parseInt(document.getElementById('num-participants').getAttribute('data-value'));
+    if (numParticipants < 2 || isNaN(numParticipants)) {
+        alert('O número de participantes deve ser pelo menos 2.');
+        return;
+    }
 
-            teams = [];
-            for (let i = 1; i <= numParticipants; i++) {
-                teams.push({ name: `Jogador ${i}`, wins: 0, losses: 0 });
-            }
+    // Inicializar `teams` com os inscritos e completar com nomes padrão se necessário
+    teams = [];
+    for (let i = 0; i < numParticipants; i++) {
+        // Usa diretamente `inscritos[i]` se for uma string
+        const playerName = inscritos[i] ? inscritos[i] : `Jogador ${i + 1}`;
+        teams.push({ name: playerName, wins: 0, losses: 0 });
+    }
 
-            currentRound = 0;
-            winners = [];
-            losers = [];
-            matchHistory = [];
+    currentRound = 0;
+    winners = [];
+    losers = [];
+    matchHistory = [];
 
-            document.getElementById('rounds').innerHTML = '';
-            document.getElementById('team-results').innerHTML = '';
-            document.getElementById('new-round-btn').style.display = 'inline';
-            document.getElementById('confirm-round-btn').style.display = 'none';
+    document.getElementById('rounds').innerHTML = '';
+    document.getElementById('team-results').innerHTML = '';
+    document.getElementById('new-round-btn').style.display = 'inline';
+    document.getElementById('confirm-round-btn').style.display = 'none';
 
-            startNewRound();
-        }
+    startNewRound();
+}
+
+
+
 
         function startNewRound() {
-            if (currentRound > 0) {
-                // A função `getWinnersAndLosers()` será chamada apenas após a confirmação da rodada
-            }
-
             currentRound++;
             let teamsForRound = currentRound === 1 ? teams.map(t => t.name) : [...winners, ...losers];
             let roundMatches = generateRoundMatches(teamsForRound);
             displayRound(roundMatches, currentRound);
             updateTeamResults();
 
-            // Exibir o botão de confirmação da rodada após a criação dos jogos
             document.getElementById('confirm-round-btn').style.display = 'inline';
             document.getElementById('new-round-btn').style.display = 'none';
         }
@@ -93,7 +135,6 @@
             losers.length = 0;
 
             const matches = document.querySelectorAll(`div[data-round="${currentRound}"] .matchup`);
-
             matches.forEach(match => {
                 const score1Input = match.querySelector('input[name="score1"]');
                 const score2Input = match.querySelector('input[name="score2"]');
@@ -107,7 +148,6 @@
 
                 const team1 = score1Input.getAttribute('data-team1');
                 const team2 = score2Input.getAttribute('data-team2');
-
                 const team1Score = parseInt(score1Input.value);
                 const team2Score = parseInt(score2Input.value);
 
@@ -116,7 +156,6 @@
                     return;
                 }
 
-                // Remove borda verde de rodadas anteriores
                 team1Span.classList.remove('winner');
                 team2Span.classList.remove('winner');
 
@@ -125,14 +164,12 @@
                     losers.push(team2);
                     updateTeamRecord(team1, true);
                     updateTeamRecord(team2, false);
-                    // Adiciona a borda verde ao vencedor
                     team1Span.classList.add('winner');
                 } else if (team2Score > team1Score) {
                     winners.push(team2);
                     losers.push(team1);
                     updateTeamRecord(team2, true);
                     updateTeamRecord(team1, false);
-                    // Adiciona a borda verde ao vencedor
                     team2Span.classList.add('winner');
                 } else {
                     alert(`A partida entre ${team1} e ${team2} terminou empatada. Por favor, resolva o empate.`);
@@ -205,11 +242,17 @@
                 const team2 = matchup[1];
 
                 matchDiv.innerHTML = `
-                    <span data-team="team1">${team1}</span>
-                    <input type="number" name="score1" placeholder="Pontuação ${team1}" data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}">
-                    <span> vs </span>
-                    <input type="number" name="score2" placeholder="Pontuação ${team2}" data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}">
-                    <span data-team="team2">${team2}</span>
+                    <div class="match-container">
+        <div class="team">
+            <span class="team-name" data-team="team1">${team1}</span>
+            <input type="number" name="score1"  data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}" class="score-input">
+        </div>
+        <span class="versus">vs</span>
+        <div class="team">
+            <input type="number" name="score2"  data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}" class="score-input">
+            <span class="team-name" data-team="team2">${team2}</span>
+        </div>
+    </div>
                 `;
                 roundDiv.appendChild(matchDiv);
             });
