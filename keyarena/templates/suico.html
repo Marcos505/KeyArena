@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        {% load static %}
-        {% include 'components/head.html' with title='KeyArena' %}
-        <link rel="stylesheet" href="{% static 'global/css/suico.css' %}" />
-    </head>
-<body >   
+<head>
+    {% load static %}
+    {% include 'components/head.html' with title='KeyArena' %}
+    <link rel="stylesheet" href="{% static 'global/css/suico.css' %}" />
+    <style>
+        /* Estilo de borda verde para os vencedores */
+        .winner {
+            background-color:  green;
+            padding: 3px;
+            
+        }
+    </style>
+</head>
+<body>   
     {% include 'components/navbar.html' %}
     
     <div class="tournament-container">
@@ -15,12 +23,13 @@
         <div id="message" style="color: red;"></div>
         <div id="rounds"></div>
         <button onclick="startNewRound()" style="display:none;" id="new-round-btn">Iniciar Nova Rodada</button>
+        <button onclick="confirmRound()" style="display:none;" id="confirm-round-btn">Confirmar Rodada</button>
         <div class="team-records">
-            <h2>Resultados das Equipes</h2>
+            <h2>Resultados dos Jogadores</h2>
             <ul id="team-results"></ul>
         </div>
     </div>
-    {% include 'components/footer.html' %}
+
     <script>
         let teams = [];
         let currentRound = 0;
@@ -34,7 +43,6 @@
 
         function startTournament() {
             const numParticipants = parseInt(document.getElementById('num-participants').getAttribute('data-value'));
-
             if (numParticipants < 2 || isNaN(numParticipants)) {
                 alert('O número de participantes deve ser pelo menos 2.');
                 return;
@@ -42,7 +50,7 @@
 
             teams = [];
             for (let i = 1; i <= numParticipants; i++) {
-                teams.push({ name: `Time ${i}`, wins: 0, losses: 0 });
+                teams.push({ name: `Jogador ${i}`, wins: 0, losses: 0 });
             }
 
             currentRound = 0;
@@ -53,63 +61,86 @@
             document.getElementById('rounds').innerHTML = '';
             document.getElementById('team-results').innerHTML = '';
             document.getElementById('new-round-btn').style.display = 'inline';
+            document.getElementById('confirm-round-btn').style.display = 'none';
 
             startNewRound();
         }
 
         function startNewRound() {
             if (currentRound > 0) {
-                getWinnersAndLosers();
+                // A função `getWinnersAndLosers()` será chamada apenas após a confirmação da rodada
             }
 
             currentRound++;
-
-            let teamsForRound = currentRound === 1
-                ? teams.map(t => t.name)
-                : [...winners, ...losers];
-
+            let teamsForRound = currentRound === 1 ? teams.map(t => t.name) : [...winners, ...losers];
             let roundMatches = generateRoundMatches(teamsForRound);
             displayRound(roundMatches, currentRound);
             updateTeamResults();
+
+            // Exibir o botão de confirmação da rodada após a criação dos jogos
+            document.getElementById('confirm-round-btn').style.display = 'inline';
+            document.getElementById('new-round-btn').style.display = 'none';
+        }
+
+        function confirmRound() {
+            getWinnersAndLosers();
+            document.getElementById('confirm-round-btn').style.display = 'none';
+            document.getElementById('new-round-btn').style.display = 'inline';
         }
 
         function getWinnersAndLosers() {
             winners.length = 0;
             losers.length = 0;
-            const selects = document.querySelectorAll(`select[data-round="${currentRound}"]`);
 
-            selects.forEach(select => {
-                const winner = select.value;
-                const team1 = select.getAttribute('data-team1');
-                const team2 = select.getAttribute('data-team2');
+            const matches = document.querySelectorAll(`div[data-round="${currentRound}"] .matchup`);
 
-                if (!team1 || !team2) {
-                    console.error("Um dos times não está definido.");
+            matches.forEach(match => {
+                const score1Input = match.querySelector('input[name="score1"]');
+                const score2Input = match.querySelector('input[name="score2"]');
+                const team1Span = match.querySelector('span[data-team="team1"]');
+                const team2Span = match.querySelector('span[data-team="team2"]');
+
+                if (!score1Input || !score2Input || !team1Span || !team2Span) {
+                    console.error("Inputs de pontuação ou spans dos times não encontrados.");
                     return;
                 }
 
-                if (winner === "") {
-                    alert('Por favor, selecione um vencedor para cada partida antes de prosseguir para a próxima rodada.');
+                const team1 = score1Input.getAttribute('data-team1');
+                const team2 = score2Input.getAttribute('data-team2');
+
+                const team1Score = parseInt(score1Input.value);
+                const team2Score = parseInt(score2Input.value);
+
+                if (isNaN(team1Score) || isNaN(team2Score)) {
+                    alert('Por favor, insira a pontuação para ambas as equipes antes de prosseguir.');
                     return;
                 }
 
-                if (winner === team1) {
+                // Remove borda verde de rodadas anteriores
+                team1Span.classList.remove('winner');
+                team2Span.classList.remove('winner');
+
+                if (team1Score > team2Score) {
                     winners.push(team1);
                     losers.push(team2);
                     updateTeamRecord(team1, true);
                     updateTeamRecord(team2, false);
-                } else if (winner === team2) {
+                    // Adiciona a borda verde ao vencedor
+                    team1Span.classList.add('winner');
+                } else if (team2Score > team1Score) {
                     winners.push(team2);
                     losers.push(team1);
                     updateTeamRecord(team2, true);
                     updateTeamRecord(team1, false);
+                    // Adiciona a borda verde ao vencedor
+                    team2Span.classList.add('winner');
+                } else {
+                    alert(`A partida entre ${team1} e ${team2} terminou empatada. Por favor, resolva o empate.`);
+                    return;
                 }
 
                 matchHistory.push([team1, team2]);
             });
-
-            console.log("Vencedores:", winners);
-            console.log("Perdedores:", losers);
         }
 
         function updateTeamRecord(teamName, won) {
@@ -163,6 +194,7 @@
             const roundsContainer = document.getElementById('rounds');
             const roundDiv = document.createElement('div');
             roundDiv.classList.add('round');
+            roundDiv.setAttribute('data-round', roundNumber);
             roundDiv.innerHTML = `<h3>Rodada ${roundNumber}</h3>`;
 
             matchups.forEach(matchup => {
@@ -173,14 +205,11 @@
                 const team2 = matchup[1];
 
                 matchDiv.innerHTML = `
-                    <span> ${team1} </span>
+                    <span data-team="team1">${team1}</span>
+                    <input type="number" name="score1" placeholder="Pontuação ${team1}" data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}">
                     <span> vs </span>
-                    <span> ${team2} </span>
-                    <select data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}">
-                        <option value="">Selecionar vencedor</option>
-                        <option value="${team1}">${team1}</option>
-                        <option value="${team2}">${team2}</option>
-                    </select>
+                    <input type="number" name="score2" placeholder="Pontuação ${team2}" data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}">
+                    <span data-team="team2">${team2}</span>
                 `;
                 roundDiv.appendChild(matchDiv);
             });
