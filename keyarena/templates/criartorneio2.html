@@ -11,6 +11,7 @@
         <div class="form-container">
             <div class="d-flex justify-content-between align-items-center">
                 <h1>Crie seu torneio</h1>
+                <label>2/2</label>
                 <span style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#infoModal">
                     <i class="bi bi-info-circle"></i>
                 </span>
@@ -115,6 +116,15 @@
             // Abrir o modal automaticamente quando a página for carregada
             const infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
             infoModal.show(); // Exibe o modal
+        });
+
+        // Restringir a data mínima a hoje
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0]; // Obtém a data de hoje no formato yyyy-mm-dd
+            document.getElementById('start-date').setAttribute('min', todayString);
+            document.getElementById('registration-start').setAttribute('min', todayString);
+            document.getElementById('registration-end').setAttribute('min', todayString);
         });
     </script>
 </body>

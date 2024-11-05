@@ -68,7 +68,7 @@
                             <div class="d-flex justify-content-around pb-2">
                             {% if torneio.tor_id not in inscricoes_dict %}
                                 {% if torneio.num_inscritos < torneio.tor_quant_participantes %}
-                                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#participateModal{{ torneio.tor_id }}">Participar</button>
+                                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#participateModal{{ torneio.tor_id }}">Entrar no Torneio</button>
                                 {% else %}
                                     <button class="btn btn-secondary" disabled>Torneio cheio</button>
                                 {% endif %}
