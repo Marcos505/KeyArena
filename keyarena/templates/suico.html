@@ -125,60 +125,75 @@ function startTournament() {
         }
 
         function confirmRound() {
-            getWinnersAndLosers();
-            document.getElementById('confirm-round-btn').style.display = 'none';
-            document.getElementById('new-round-btn').style.display = 'inline';
+    const hasTie = getWinnersAndLosers();
+
+    // Somente se não houver empate, prosseguir para a próxima rodada
+    if (!hasTie) {
+        document.getElementById('confirm-round-btn').style.display = 'none';
+        document.getElementById('new-round-btn').style.display = 'inline';
+    }
+}
+
+function getWinnersAndLosers() {
+    winners.length = 0;
+    losers.length = 0;
+    const matches = document.querySelectorAll(`div[data-round="${currentRound}"] .matchup`);
+    let hasTie = false;
+
+    matches.forEach(match => {
+        const score1Input = match.querySelector('input[name="score1"]');
+        const score2Input = match.querySelector('input[name="score2"]');
+        const team1Span = match.querySelector('span[data-team="team1"]');
+        const team2Span = match.querySelector('span[data-team="team2"]');
+
+        if (!score1Input || !score2Input || !team1Span || !team2Span) {
+            console.error("Inputs de pontuação ou spans dos times não encontrados.");
+            return;
         }
 
-        function getWinnersAndLosers() {
-            winners.length = 0;
-            losers.length = 0;
+        const team1 = score1Input.getAttribute('data-team1');
+        const team2 = score2Input.getAttribute('data-team2');
+        const team1Score = parseInt(score1Input.value);
+        const team2Score = parseInt(score2Input.value);
 
-            const matches = document.querySelectorAll(`div[data-round="${currentRound}"] .matchup`);
-            matches.forEach(match => {
-                const score1Input = match.querySelector('input[name="score1"]');
-                const score2Input = match.querySelector('input[name="score2"]');
-                const team1Span = match.querySelector('span[data-team="team1"]');
-                const team2Span = match.querySelector('span[data-team="team2"]');
-
-                if (!score1Input || !score2Input || !team1Span || !team2Span) {
-                    console.error("Inputs de pontuação ou spans dos times não encontrados.");
-                    return;
-                }
-
-                const team1 = score1Input.getAttribute('data-team1');
-                const team2 = score2Input.getAttribute('data-team2');
-                const team1Score = parseInt(score1Input.value);
-                const team2Score = parseInt(score2Input.value);
-
-                if (isNaN(team1Score) || isNaN(team2Score)) {
-                    alert('Por favor, insira a pontuação para ambas as equipes antes de prosseguir.');
-                    return;
-                }
-
-                team1Span.classList.remove('winner');
-                team2Span.classList.remove('winner');
-
-                if (team1Score > team2Score) {
-                    winners.push(team1);
-                    losers.push(team2);
-                    updateTeamRecord(team1, true);
-                    updateTeamRecord(team2, false);
-                    team1Span.classList.add('winner');
-                } else if (team2Score > team1Score) {
-                    winners.push(team2);
-                    losers.push(team1);
-                    updateTeamRecord(team2, true);
-                    updateTeamRecord(team1, false);
-                    team2Span.classList.add('winner');
-                } else {
-                    alert(`A partida entre ${team1} e ${team2} terminou empatada. Por favor, resolva o empate.`);
-                    return;
-                }
-
-                matchHistory.push([team1, team2]);
-            });
+        if (isNaN(team1Score) || isNaN(team2Score)) {
+            alert('Por favor, insira a pontuação para ambas as equipes antes de prosseguir.');
+            hasTie = true;
+            return;
         }
+
+        team1Span.classList.remove('winner');
+        team2Span.classList.remove('winner');
+
+        if (team1Score > team2Score) {
+            winners.push(team1);
+            losers.push(team2);
+            updateTeamRecord(team1, true);
+            updateTeamRecord(team2, false);
+            team1Span.classList.add('winner');
+        } else if (team2Score > team1Score) {
+            winners.push(team2);
+            losers.push(team1);
+            updateTeamRecord(team2, true);
+            updateTeamRecord(team1, false);
+            team2Span.classList.add('winner');
+        } else {
+            alert(`A partida entre ${team1} e ${team2} terminou empatada. Por favor, resolva o empate.`);
+            hasTie = true;
+        }
+
+        matchHistory.push([team1, team2]);
+    });
+
+    return hasTie;
+}
+
+
+
+
+
+
+
 
         function updateTeamRecord(teamName, won) {
             const team = teams.find(t => t.name === teamName);
@@ -245,11 +260,11 @@ function startTournament() {
                     <div class="match-container">
         <div class="team">
             <span class="team-name" data-team="team1">${team1}</span>
-            <input type="number" name="score1"  data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}" class="score-input">
+            <input type="number" name="score1" min="0" data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}" class="score-input">
         </div>
         <span class="versus">vs</span>
         <div class="team">
-            <input type="number" name="score2"  data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}" class="score-input">
+            <input type="number" name="score2" min="0" data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}" class="score-input">
             <span class="team-name" data-team="team2">${team2}</span>
         </div>
     </div>
