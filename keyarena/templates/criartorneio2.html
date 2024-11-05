@@ -1,16 +1,21 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     {% load static %}
-    {% include 'components/head.html' with title='KeyArena' %}    
+    {% include 'components/head.html' with title='KeyArena' %}
     <link rel="stylesheet" href="{% static 'global/css/style_criartorneio.css' %}">
 </head>
 <body>
     {% include 'components/navbar.html' %}
     <main class='content'>
         <div class="form-container">
-            <h1>Crie seu torneio</h1>
-            <form method="POST" action="{% url 'salvar_torneio2' %}" onsubmit="return validateDates()">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Crie seu torneio</h1>
+                <span style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#infoModal">
+                    <i class="bi bi-info-circle"></i>
+                </span>
+            </div>
+            <form method="POST" action="{% url 'salvar_torneio2' %}" id="tournamentForm">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="start-date">Data de início do torneio</label>
@@ -25,43 +30,92 @@
                     <input type="date" id="registration-end" name="registration-end" required>
                 </div>
                 <div class="button-group">
-                    <button class="btn btn-success" type="submit">Concluir</button>
+                    <button id="submitButton" class="btn btn-success" type="submit" disabled>Concluir</button>
                     <button class="btn btn-danger" type="button" onclick="history.back()">Voltar</button>
                 </div>
             </form>
         </div>
     </main>
+
+    <!-- Modal de Informação -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">Regras sobre datas de torneio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul style="list-style-type: disc;">
+                        <li>A data de início das inscrições não pode ser posterior à data de término das inscrições.</li><br>
+                        <li>A data de início do torneio não pode ser antes da data de início das inscrições.</li><br>
+                        <li>A data de fim das inscrições não pode ser posterior à data de início do torneio.</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% include 'components/footer.html' %}
 
     <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
+        // Função para validar as datas
         function validateDates() {
             const startDate = new Date(document.getElementById('start-date').value);
             const registrationStart = new Date(document.getElementById('registration-start').value);
             const registrationEnd = new Date(document.getElementById('registration-end').value);
+            const submitButton = document.getElementById('submitButton');
 
             // Verifica se a data de início das inscrições é depois da data de término das inscrições
             if (registrationStart > registrationEnd) {
                 alert("A data de início das inscrições não pode ser posterior à data de término das inscrições.");
+                submitButton.disabled = true; // Desabilita o botão
                 return false;
             }
 
             // Verifica se a data de início do torneio é antes da data de início das inscrições
             if (startDate < registrationStart) {
                 alert("A data de início do torneio não pode ser antes da data de início das inscrições.");
+                submitButton.disabled = true; // Desabilita o botão
                 return false;
             }
 
             // Verifica se a data de término das inscrições é depois da data de início do torneio
             if (registrationEnd > startDate) {
                 alert("A data de fim das inscrições não pode ser posterior à data de início do torneio.");
+                submitButton.disabled = true; // Desabilita o botão
                 return false;
             }
 
+            // Se todas as condições forem atendidas, habilita o botão de enviar
+            submitButton.disabled = false;
             return true;
         }
+
+        // Função para verificar as datas ao alterar algum campo
+        function checkDatesOnInput() {
+            validateDates();
+        }
+
+        // Adiciona eventos de mudança para os campos de data
+        document.getElementById('start-date').addEventListener('input', checkDatesOnInput);
+        document.getElementById('registration-start').addEventListener('input', checkDatesOnInput);
+        document.getElementById('registration-end').addEventListener('input', checkDatesOnInput);
+
+        // Função inicial para desabilitar o botão até que a validação esteja correta
+        document.addEventListener('DOMContentLoaded', () => {
+            validateDates();
+
+            // Abrir o modal automaticamente quando a página for carregada
+            const infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
+            infoModal.show(); // Exibe o modal
+        });
     </script>
 </body>
 </html>
