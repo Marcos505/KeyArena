@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    text-align: center;
+}
+
+.tournament-container {
+    padding-top: 30px;
+    margin: 20px;
+    
+}
+
+
+#rounds {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.round {
+    margin: 10px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.matchup {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.team-records {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 50%;
+    padding-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.team-records ul {
+    list-style: none;
+    padding: 0;
+}
+
+.team-records li {
+    margin: 5px 0;
+}
+
+button, #suico {
+    width: 200px; /* Define uma largura específica */
+    margin: 20px auto; /* Centraliza o botão horizontalmente */
+    padding: 10px 20px;
+    background-color: #444;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #666;
+}
+
+.result-dropdown {
+    margin-left: 10px;
+}

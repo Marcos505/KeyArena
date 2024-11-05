@@ -202,6 +202,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  
 }
 
 /* Navbar */
@@ -269,3 +270,6 @@ body {
 .password-rules-box ul li {
     font-size: 14px;
 }
+
+
+

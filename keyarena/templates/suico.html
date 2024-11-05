@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% include 'components/head.html' with title='KeyArena' %}
+    <link rel="stylesheet" href="{% static 'global/css/suico.css' %}" />
+    <style>
+        /* Estilo de borda verde para os vencedores */
+        .winner {
+            background-color: green;
+            padding: 3px;
+        }
+
+        .match-container {
+        display: flex;
+        align-items: center; /* Alinha verticalmente os itens */
+        justify-content: center; /* Centraliza os itens */
+        gap: 10px; /* Espaço entre os elementos */
+    }
+
+    /* Container para cada equipe */
+    .team {
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Espaço entre nome e input */
+    }
+
+    .team-name {
+        display: inline-block;
+        width: 150px; /* Ajuste este valor conforme necessário */
+        white-space: nowrap; /* Evita quebra de linha */
+        overflow: hidden;
+        text-overflow: ellipsis; /* Adiciona reticências se o nome for muito longo */
+    }
+
+    /* Estilo do input de pontuação */
+    .score-input {
+        width: 50px;
+        text-align: center; /* Centraliza o texto do input */
+    }
+
+    /* Estilo do texto "vs" */
+    .versus {
+        margin: 0 5px;
+        font-weight: bold;
+    }
+    </style>
+</head>
+<body>   
+    {% include 'components/navbar.html' %}
+
+    <h1 class="pt-5">{{ torneio.tor_nome_torneio }}!</h1>
+            {% if mensagem %}
+                <h2>Você já está inscrito neste torneio!</h2>
+            {% else %}
+                <h2>Você se inscreveu neste torneio!</h2>
+            {% endif %}
+    <div class="tournament-container">
+        <div class="input-container">
+            <p id="num-participants" data-value="{{ torneio.tor_quant_participantes }}">Número de Participantes: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
+        </div>
+        <div id="message" style="color: red;"></div>
+        <div id="rounds"></div>
+        <button onclick="startNewRound()" style="display:none;" id="new-round-btn">Iniciar Nova Rodada</button>
+        <button onclick="confirmRound()" style="display:none;" id="confirm-round-btn">Confirmar Rodada</button>
+        <div class="team-records">
+            <h2>Resultados dos Jogadores</h2>
+            <ul id="team-results"></ul>
+        </div>
+    </div>
+    <script>
+        // Supondo que `inscritos` é uma lista de objetos `{ name: "Nome do Participante" }` passada do backend.
+        
+        const inscritos = {{ participantes|safe }} || [];
+        let teams = [];
+        let currentRound = 0;
+        let winners = [];
+        let losers = [];
+        let matchHistory = [];
+
+        document.addEventListener("DOMContentLoaded", function() {
+    startTournament();
+});
+
+function startTournament() {
+    const numParticipants = parseInt(document.getElementById('num-participants').getAttribute('data-value'));
+    if (numParticipants < 2 || isNaN(numParticipants)) {
+        alert('O número de participantes deve ser pelo menos 2.');
+        return;
+    }
+
+    // Inicializar `teams` com os inscritos e completar com nomes padrão se necessário
+    teams = [];
+    for (let i = 0; i < numParticipants; i++) {
+        // Usa diretamente `inscritos[i]` se for uma string
+        const playerName = inscritos[i] ? inscritos[i] : `Jogador ${i + 1}`;
+        teams.push({ name: playerName, wins: 0, losses: 0 });
+    }
+
+    currentRound = 0;
+    winners = [];
+    losers = [];
+    matchHistory = [];
+
+    document.getElementById('rounds').innerHTML = '';
+    document.getElementById('team-results').innerHTML = '';
+    document.getElementById('new-round-btn').style.display = 'inline';
+    document.getElementById('confirm-round-btn').style.display = 'none';
+
+    startNewRound();
+}
+
+
+
+
+        function startNewRound() {
+            currentRound++;
+            let teamsForRound = currentRound === 1 ? teams.map(t => t.name) : [...winners, ...losers];
+            let roundMatches = generateRoundMatches(teamsForRound);
+            displayRound(roundMatches, currentRound);
+            updateTeamResults();
+
+            document.getElementById('confirm-round-btn').style.display = 'inline';
+            document.getElementById('new-round-btn').style.display = 'none';
+        }
+
+        function confirmRound() {
+            getWinnersAndLosers();
+            document.getElementById('confirm-round-btn').style.display = 'none';
+            document.getElementById('new-round-btn').style.display = 'inline';
+        }
+
+        function getWinnersAndLosers() {
+            winners.length = 0;
+            losers.length = 0;
+
+            const matches = document.querySelectorAll(`div[data-round="${currentRound}"] .matchup`);
+            matches.forEach(match => {
+                const score1Input = match.querySelector('input[name="score1"]');
+                const score2Input = match.querySelector('input[name="score2"]');
+                const team1Span = match.querySelector('span[data-team="team1"]');
+                const team2Span = match.querySelector('span[data-team="team2"]');
+
+                if (!score1Input || !score2Input || !team1Span || !team2Span) {
+                    console.error("Inputs de pontuação ou spans dos times não encontrados.");
+                    return;
+                }
+
+                const team1 = score1Input.getAttribute('data-team1');
+                const team2 = score2Input.getAttribute('data-team2');
+                const team1Score = parseInt(score1Input.value);
+                const team2Score = parseInt(score2Input.value);
+
+                if (isNaN(team1Score) || isNaN(team2Score)) {
+                    alert('Por favor, insira a pontuação para ambas as equipes antes de prosseguir.');
+                    return;
+                }
+
+                team1Span.classList.remove('winner');
+                team2Span.classList.remove('winner');
+
+                if (team1Score > team2Score) {
+                    winners.push(team1);
+                    losers.push(team2);
+                    updateTeamRecord(team1, true);
+                    updateTeamRecord(team2, false);
+                    team1Span.classList.add('winner');
+                } else if (team2Score > team1Score) {
+                    winners.push(team2);
+                    losers.push(team1);
+                    updateTeamRecord(team2, true);
+                    updateTeamRecord(team1, false);
+                    team2Span.classList.add('winner');
+                } else {
+                    alert(`A partida entre ${team1} e ${team2} terminou empatada. Por favor, resolva o empate.`);
+                    return;
+                }
+
+                matchHistory.push([team1, team2]);
+            });
+        }
+
+        function updateTeamRecord(teamName, won) {
+            const team = teams.find(t => t.name === teamName);
+            if (team) {
+                if (won) {
+                    team.wins++;
+                } else {
+                    team.losses++;
+                }
+            }
+        }
+
+        function generateRoundMatches(teams) {
+            let matchups = [];
+            let availableTeams = [...teams];
+
+            if (availableTeams.length % 2 !== 0) {
+                availableTeams.push('BYE');
+            }
+
+            while (availableTeams.length >= 2) {
+                let team1 = availableTeams.shift();
+                let opponentIndex = availableTeams.findIndex(opponent => !hasPlayedBefore(team1, opponent));
+                if (opponentIndex === -1) {
+                    opponentIndex = 0;
+                }
+
+                let team2 = availableTeams.splice(opponentIndex, 1)[0];
+                if (team2) {
+                    matchups.push([team1, team2]);
+                } else {
+                    console.error(`Não foi possível encontrar um oponente para: ${team1}`);
+                }
+            }
+
+            return matchups;
+        }
+
+        function hasPlayedBefore(team1, team2) {
+            if (!team1 || !team2) {
+                return false;
+            }
+            return matchHistory.some(match => 
+                (match[0] === team1 && match[1] === team2) || 
+                (match[0] === team2 && match[1] === team1)
+            );
+        }
+
+        function displayRound(matchups, roundNumber) {
+            const roundsContainer = document.getElementById('rounds');
+            const roundDiv = document.createElement('div');
+            roundDiv.classList.add('round');
+            roundDiv.setAttribute('data-round', roundNumber);
+            roundDiv.innerHTML = `<h3>Rodada ${roundNumber}</h3>`;
+
+            matchups.forEach(matchup => {
+                const matchDiv = document.createElement('div');
+                matchDiv.classList.add('matchup');
+
+                const team1 = matchup[0];
+                const team2 = matchup[1];
+
+                matchDiv.innerHTML = `
+                    <div class="match-container">
+        <div class="team">
+            <span class="team-name" data-team="team1">${team1}</span>
+            <input type="number" name="score1"  data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}" class="score-input">
+        </div>
+        <span class="versus">vs</span>
+        <div class="team">
+            <input type="number" name="score2"  data-round="${roundNumber}" data-team1="${team1}" data-team2="${team2}" class="score-input">
+            <span class="team-name" data-team="team2">${team2}</span>
+        </div>
+    </div>
+                `;
+                roundDiv.appendChild(matchDiv);
+            });
+
+            roundsContainer.appendChild(roundDiv);
+        }
+
+        function updateTeamResults() {
+            const teamResultsContainer = document.getElementById('team-results');
+            teamResultsContainer.innerHTML = '';
+
+            teams.forEach(team => {
+                const teamRecord = document.createElement('li');
+                teamRecord.textContent = `${team.name}: ${team.wins} Vitórias, ${team.losses} Derrotas`;
+                teamResultsContainer.appendChild(teamRecord);
+            });
+        }
+    </script>
+</body>
+</html>
