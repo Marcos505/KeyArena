@@ -26,7 +26,7 @@
                             <th>Participantes</th>
                             <th>Status</th>
                             <th>Data de Inicio</th>
-
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="tournamentTable">
@@ -45,7 +45,7 @@
                             <td>{{ torneio.tor_data_inicio|date:"d/m/Y" }}</td>
                             <td>
                                 <div class="d-flex justify-content-around pb-2">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                     data-bs-target="#descriptionModal{{ torneio.tor_id }}">
                                     Descrição
                                 </button>
@@ -58,9 +58,15 @@
                                 </a>
                                </div>
                             </td>
-                            
-                            
+                            <td>
+                                <div class="d-flex justify-content-around pb-2">
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ torneio.tor_id }}">
+                                        Excluir
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
+                        <!-- Modal de Descrição -->
                         <div class="modal fade" id="descriptionModal{{ torneio.tor_id }}" tabindex="-1"
                             aria-labelledby="descriptionModal{{ torneio.tor_id }}Label" aria-hidden="true">
                             <div class="modal-dialog">
@@ -78,6 +84,29 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Fechar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal de Confirmação de Exclusão -->
+                        <div class="modal fade" id="deleteModal{{ torneio.tor_id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ torneio.tor_id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel{{ torneio.tor_id }}">Confirmar Exclusão</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Você tem certeza que deseja excluir o torneio "{{ torneio.tor_nome_torneio }} {{ torneio.tor_id }}"?
+                                    </div>
+                                    <div class="modal-footer">
+                                        
+                                        <form action="{% url 'excluir_torneio' torneio.tor_id %}" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Excluir</button>
+                                        </form>
+                                        
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                     </div>
                                 </div>
                             </div>
@@ -107,41 +136,50 @@
                                 {% endif %}
                             </td>
                             <td>
+                                <div class="d-flex justify-content-around pb-2">
+                                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                    data-bs-target="#inscriptionModal{{ inscricao.ins_id }}">
+                                    Detalhes
+                                </button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-around pb-2">
+                                <a href="{% url 'chaveamento' inscricao.ins_tor_torneios.tor_id %}?editable=false" class="btn btn-dark" role="button">
+                                    Ver Chaveamento
+                                </a>
+                            </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-around pb-2">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}">
                                     Desistir do Torneio
                                 </button>
-                            </td>
-                            <td>
-                                <a href="{% url 'chaveamento' inscricao.ins_tor_torneios.tor_id %}?editable=false" class="btn btn-dark" role="button">
-                                    Ver Chaveamento
-                                </a>
+                                </div>
                             </td>
                         </tr>
-                        <div class="modal fade" id="descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}"
-                            tabindex="-1" aria-labelledby="descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}Label"
-                            aria-hidden="true">
+                        <!-- Modal de Detalhes de Inscrição -->
+                        <div class="modal fade" id="inscriptionModal{{ inscricao.ins_id }}" tabindex="-1" aria-labelledby="inscriptionModal{{ inscricao.ins_id }}Label" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title"
-                                            id="descriptionModal{{ inscricao.ins_tor_torneios.tor_id }}Label">Desistir
-                                            do {{ inscricao.ins_tor_torneios.tor_nome_torneio }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                                        <h5 class="modal-title" id="inscriptionModal{{ inscricao.ins_id }}Label">
+                                            Detalhes sobre sua inscrição no torneio {{ inscricao.ins_tor_torneios.tor_nome_torneio }}
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        Aviso: Tem certeza que quer desistir?<br>
+                                        <strong>Data de Inscrição:</strong> {{ inscricao.ins_data_inscricao|date:"d/m/Y" }}<br>
+                                        <strong>Observações:</strong> {{ inscricao.ins_observacoes }}<br>
+                                        <strong>Participante:</strong> {{ inscricao.ins_usu_participante.usu_nome_completo }}<br>
+                                        <strong>Nome do Torneio:</strong> {{ inscricao.ins_tor_torneios.tor_nome_torneio }}<br>
+                                        <strong>Modalidade:</strong> {{ inscricao.ins_tor_torneios.tor_tipo_torneio.ttor_tipo }}<br>
+                                        <strong>Status do Torneio:</strong> {% if inscricao.ins_tor_torneios.tor_ativo %}Ativo{% else %}Finalizado{% endif %}<br>
+                                        <strong>Data de Início do Torneio:</strong> {{ inscricao.ins_tor_torneios.tor_data_inicio|date:"d/m/Y" }}<br>
                                     </div>
                                     <div class="modal-footer">
-                                        <form action="{% url 'cancelar_inscricao' inscricao.ins_tor_torneios.tor_id %}"
-                                            method="post">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Desistir</button>
-                                        </form>
-                                        <button type="button" class="btn btn-danger"
-                                            data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                                     </div>
                                 </div>
                             </div>
@@ -158,7 +196,7 @@
     <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-        </script>
+    </script>
     <script>
         document.getElementById('filterInput').addEventListener('keyup', function () {
             const filter = this.value.toLowerCase();
@@ -201,13 +239,13 @@
                 this.classList.add('btn-dark'); // adiciona uma nova classe
             }
         });
+
         document.addEventListener('DOMContentLoaded', function () {
             const showInscricoes = {{ show_inscricoes|yesno:"true,false" }};
             const table1 = document.getElementById('table1');
             const table2 = document.getElementById('table2');
             const title = document.querySelector('h1');
             const button = document.getElementById('troca');
-
 
             if (showInscricoes) {
                 table1.classList.add('d-none');
@@ -225,8 +263,8 @@
                 button.classList.add('btn-success');
             }
         });
-
     </script>
+
 </body>
 
 </html>

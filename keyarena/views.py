@@ -1,6 +1,6 @@
 import json
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from io import BytesIO
 import pyotp
@@ -435,3 +435,13 @@ def verificar_nome_torneio(request):
 
 def suico(request):
     return render(request,"suico.html")
+
+
+def excluir_torneio(request, torneio_id):
+    if request.method == 'POST':
+        torneio = get_object_or_404(Torneio, tor_id=torneio_id)
+        torneio.delete()  # Exclui o torneio do banco de dados
+        return redirect('torneios')  # Redireciona para a página de listagem de torneios
+    return redirect('torneios')
+
+

@@ -30,6 +30,7 @@ urlpatterns = [
 
     path('salvar_resultados/', views.salvar_resultados, name='salvar_resultados'),
     path('check-tournament-exists/', views.check_tournament_exists, name='check_tournament_exists'),
+    path('excluir_torneio/<int:torneio_id>', views.excluir_torneio, name='excluir_torneio'),
 
 ]
 
