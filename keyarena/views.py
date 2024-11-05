@@ -1,18 +1,19 @@
-from django.http import HttpResponse
+import json
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from io import BytesIO
 import pyotp
 import qrcode
 import base64
-from .models import InscricaoTorneio, TiposTorneio, Usuario
+from .models import InscricaoTorneio, TiposTorneio, Usuario, PartidaRodada, Resultado, TorneioRodada
 from keyarena.models import Torneio
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.db.models import Count
-
+import json
 
 def index(request):
     if hasattr(request.user, 'usu_id'):
@@ -69,22 +70,46 @@ def home_page(request):
 @login_required
 def salvar_torneio1(request):
     modalidades = TiposTorneio.objects.all()
+    
+    # Verifica se o torneio já existe com o mesmo nome e modalidade
     if request.method == 'POST':
         nome_torneio = request.POST.get('tournament-name')
         modalidade_id = request.POST.get('modality')
+        
+        # Verifica se já existe um torneio com esse nome e modalidade
+        if Torneio.objects.filter(tor_nome_torneio=nome_torneio, tor_tipo_torneio_id=modalidade_id).exists():
+            messages.error(request, 'Já existe um torneio com esse nome nesta modalidade.')
+            return render(request, 'criartorneio.html', {'modalidades': modalidades})
+        
+        # Caso não exista, salva os dados na sessão
         quant_participants = request.POST.get('tournament-max-player')
         descricao = request.POST.get('description')
         usuario_criador_id = request.user.id  # Armazena apenas o ID do usuário
 
+        # Salva os dados no session storage
         request.session['nome_torneio'] = nome_torneio
         request.session['modalidade_id'] = modalidade_id
         request.session['quant_participants'] = quant_participants
         request.session['descricao'] = descricao
         request.session['usuario_criador_id'] = usuario_criador_id  # Salva apenas o ID
-
-        return redirect('salvar_torneio2')
+        
+        return redirect('salvar_torneio2')  # Redireciona para a próxima etapa do torneio
 
     return render(request, 'criartorneio.html', {'modalidades': modalidades})
+
+
+def check_tournament_exists(request):
+    if request.method == 'POST':
+        # Captura os dados do AJAX
+        data = json.loads(request.body)
+        tournament_name = data.get('tournament_name')
+        modality = data.get('modality')
+
+        # Verifica se o torneio já existe com esse nome e modalidade
+        exists = Torneio.objects.filter(tor_nome_torneio=tournament_name, tor_tipo_torneio_id=modality).exists()
+
+        # Retorna a resposta em formato JSON
+        return JsonResponse({'exists': exists})
 
 @never_cache
 @login_required
@@ -343,6 +368,69 @@ def chaveamento(request, torneio_id):
             'torneio': torneio,
             'editable': editable,
             'participantes': participantes,})
+
+
+def salvar_resultados(request):
+    if request.method == 'POST':
+        torneio_id = request.POST.get('torneio_id')
+        resultados = request.POST.getlist('resultados[]')  # Recebendo como JSON
+
+
+        # Print para verificar os dados recebidos
+        print("Dados recebidos:", request.POST)
+        print("Torneio ID:", torneio_id)
+        print("Resultados recebidos:", resultados)
+
+        for resultado in resultados:
+            res = json.loads(resultado)  # Deserializa o JSON
+            jogador1 = res['jogador1']
+            jogador2 = res['jogador2']
+            placar1 = res['placar1']
+            placar2 = res['placar2']
+            rodada = res['rodada']
+
+            # Print para verificar os dados de cada partida
+            print("Rodada ", rodada)
+            print("Jogador 1:", jogador1)
+            print("Jogador 2:", jogador2)
+            print("Placar 1:", placar1)
+            print("Placar 2:", placar2)
+            
+            # Obtém ou cria a rodada do torneio associada ao torneio_id
+            torneio_rodada, created = TorneioRodada.objects.get_or_create(
+                 rod_tor_torneio_id=torneio_id,
+                 rod_rodada=rodada  # Assumindo que você tenha um campo para o número da rodada
+            )
+            
+            # Obtenha os usuários e torneios 
+            usuario1 = Usuario.objects.filter(usu_nome_completo=jogador1).first()
+            usuario2 = Usuario.objects.filter(usu_nome_completo=jogador2).first()
+            
+            # Crie a partida
+            PartidaRodada.objects.create(
+                par_rod_rodada=torneio_rodada,
+                par_usu_participante_um=usuario1,
+                par_placar_participante_um=placar1,
+                par_usu_participante_dois=usuario2,
+                par_placar_participante_dois=placar2,
+            )
+
+        return redirect(inscricao)
+    return redirect(inscricao)
+
+
+
+def verificar_nome_torneio(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        name = data.get('name')
+        modality_id = data.get('modality_id')
+
+        # Verificar se já existe um torneio com o mesmo nome e modalidade
+        existe_torneio = Torneio.objects.filter(tor_nome_torneio=name, tor_tipo_torneio_id=modality_id).exists()
+
+        # Retornar se o nome está disponível ou não
+        return JsonResponse({'is_available': not existe_torneio})
     
 
 def suico(request):

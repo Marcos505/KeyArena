@@ -1,35 +1,56 @@
 {% load static %}
+<style>
+    /* Estilos personalizados para o menu */
+    .nav-link {
+        font-weight: 500; /* Aumenta a espessura da fonte */
+        color: white; /* Cor do texto */
+        transition: color 0.3s; /* Transição suave para a cor */
+    }
+
+    .nav-link:hover {
+        color: #f8f9fa; /* Cor do texto ao passar o mouse */
+        text-decoration: underline; /* Sublinha o texto ao passar o mouse */
+    }
+</style>
+
 <nav class="navbar navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" onclick="location.href='/home_page/'">
             <i class="bi bi-key-fill m-2"></i>
             KeyArena
         </a>
-        <div class="dropdown">
-            <div class="avatar" id="avatarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="ms-auto">  <!-- Adicionando 'ms-auto' para alinhar à direita -->
+            <ul class="navbar-nav d-flex flex-row">
                 {% if request.user.is_authenticated %}
-                    {% if request.user.foto_perfil %}
-                        <img src="{{ request.user.foto_perfil.url }}" alt="Foto de Perfil" class="img-thumbnail">
-                    {% else %}
-                        <img src="{% static 'images/default_avatar.png' %}" alt="Foto de Perfil Padrão" class="img-thumbnail">
-                    {% endif %}
-                {% else %}
-                    <img src="{% static 'images/default_avatar.png' %}" alt="Foto de Perfil Padrão" class="img-thumbnail">
-                {% endif %}
-            </div>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="avatarDropdown">
-                {% if request.user.is_authenticated %}
-                    <li><a class="dropdown-item" onclick="location.href='/home_page/'">Menu Principal</a></li>
-                    <li><a class="dropdown-item" onclick="location.href='/perfil'">Perfil</a></li>
-                    <li><a class="dropdown-item" href="#">Configurações</a></li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li>
-                        <a class="dropdown-item flex-fill me-2" data-bs-toggle="modal" data-bs-target="#exitModal">Sair do Sistema</a>
+                    <li class="nav-item me-4"> <!-- Adicionando 'me-4' para espaçamento -->
+                        <a class="nav-link" onclick="location.href='/home_page/'">Menu Principal</a>
+                    </li>
+                    <li class="nav-item me-4"> <!-- Adicionando 'me-4' para espaçamento -->
+                        <a class="nav-link" onclick="location.href='/perfil'">Perfil</a>
+                    </li>
+                    <li class="nav-item me-4"> <!-- Adicionando 'me-4' para espaçamento -->
+                        <a class="nav-link" href="#">Configurações</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" data-bs-toggle="modal" data-bs-target="#exitModal">Sair do Sistema</a>
                     </li>
                 {% else %}
-                    <li><a class="dropdown-item" onclick="location.href='/login'">Login</a></li>
+                    <li class="nav-item me-4"> <!-- Adicionando 'me-4' para espaçamento -->
+                        <a class="nav-link" onclick="location.href='/'">Login</a>
+                    </li>
                 {% endif %}
             </ul>
+        </div>
+        <div class="avatar ms-2">
+            {% if request.user.is_authenticated %}
+                {% if request.user.foto_perfil %}
+                    <img src="{{ request.user.foto_perfil.url }}" alt="Foto de Perfil" class="img-thumbnail" style="width: 40px; height: 40px;">
+                {% else %}
+                    <img src="{% static 'images/default_avatar.png' %}" alt="Foto de Perfil Padrão" class="img-thumbnail" style="width: 40px; height: 40px;">
+                {% endif %}
+            {% else %}
+                <img src="{% static 'images/default_avatar.png' %}" alt="Foto de Perfil Padrão" class="img-thumbnail" style="width: 40px; height: 40px;">
+            {% endif %}
         </div>
     </div>
 </nav>

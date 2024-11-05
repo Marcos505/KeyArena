@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.forms import ValidationError
 import pyotp
 
 class UsuarioManager(BaseUserManager):
@@ -76,6 +77,16 @@ class Torneio(models.Model):
 
     def __str__(self):
         return self.tor_nome_torneio
+    
+    def clean(self):
+        # Verificar se já existe um torneio com o mesmo nome e modalidade
+        if Torneio.objects.filter(tor_nome_torneio=self.tor_nome_torneio, tor_tipo_torneio=self.tor_tipo_torneio).exists():
+            raise ValidationError(f"Já existe um torneio com o nome '{self.tor_nome_torneio}' nesta modalidade.")
+    
+    def save(self, *args, **kwargs):
+        # Chama o método clean antes de salvar
+        self.clean()
+        super().save(*args, **kwargs)
 
 # Tabela: torneio_rodadas
 class TorneioRodada(models.Model):
@@ -101,11 +112,21 @@ class PartidaRodada(models.Model):
     par_rod_rodada = models.ForeignKey(TorneioRodada, on_delete=models.CASCADE)
     par_usu_participante_um = models.ForeignKey(Usuario, related_name='partida_participante_um', on_delete=models.CASCADE)
     par_usu_participante_dois = models.ForeignKey(Usuario, related_name='partida_participante_dois', on_delete=models.CASCADE)
-    par_resultado = models.BooleanField()
-
+    par_placar_participante_um = models.IntegerField()  # Armazena o placar do participante 1
+    par_placar_participante_dois = models.IntegerField()  # Armazena o placar do participante 2
+    
     def __str__(self):
         return f"Partida entre {self.par_usu_participante_um} e {self.par_usu_participante_dois}"
-
+    
+    # Método para determinar o vencedor
+    def vencedor(self):
+        if self.par_placar_participante_um > self.par_placar_participante_dois:
+            return self.par_usu_participante_um
+        elif self.par_placar_participante_um < self.par_placar_participante_dois:
+            return self.par_usu_participante_dois
+        else:
+            return None  # Empate, se necessário
+        
 # Tabela: resultados
 class Resultado(models.Model):
     res_id = models.AutoField(primary_key=True)

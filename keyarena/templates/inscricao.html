@@ -36,11 +36,6 @@
 
     <main class='content'>
             <h1>{{ torneio.tor_nome_torneio }}!</h1>
-            {% if mensagem %}
-                <h2>Você já está inscrito neste torneio!</h2>
-            {% else %}
-                <h2>Você se inscreveu neste torneio!</h2>
-            {% endif %}
 
             <h2>Chaveamento do Torneio</h2>
 
@@ -56,21 +51,32 @@
             </div>
             <div id="bracket"></div>
 
-            {% elif torneio.tor_tipo_torneio.ttor_tipo == "Swiss" %}
-            <div class="input-container">
-                <p>Número de Jogadores: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
-            </div>
-            <div id="bracket"></div>
-
-            {% elif torneio.tor_tipo_torneio.ttor_tipo == "Round Robin" %}
-            <div class="input-container">
-                <p>Número de Jogadores: <strong>{{ torneio.tor_quant_participantes }}</strong></p>
-            </div>
-            <div id="bracket"></div>
-
-            {% else %}
-            <p>Chaveamento não disponível para este tipo de torneio.</p>
             {% endif %}
+            
+            <button type="button" id="openModalButton">Salvar Resultados</button>
+            
+
+            <div class="modal fade" id="matchModal" tabindex="-1" aria-labelledby="matchModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="matchModalLabel">Resultados das Partidas</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="modalContent">
+                            <form id="resultadosForm" method="POST" action="{% url 'salvar_resultados' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="torneio_id" value="{{ torneio.tor_id }}">
+                                <div id="resultsContainer"></div>
+                                <button type="submit" id="confirmResults" class="btn btn-primary">Confirmar</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -109,12 +115,9 @@
                 const totalTeams = nextPowerOfTwo(maxParticipantes); // Próxima potência de 2
                 const teams = [];
 
-                // Embaralha os inscritos
-                const shuffledInscritos = shuffleArray(inscritos.slice());
-    
-                // 1. Adiciona os inscritos embaralhados
-                shuffledInscritos.forEach(participante => {
+                inscritos.forEach(participante => {
                     teams.push([participante, ""]);
+                    console.log(participante)
                 });
     
                 // 2. Preenche os slots restantes
@@ -170,6 +173,122 @@
             });
 
             onTournamentTypeLoaded(tournamentType);
+
+
+
+            $(document).on('click', '#openModalButton', function() {
+                let resultados = [];
+                let rodadaAtual = 0;
+
+                $('.round').each(function() {
+                    rodadaAtual++;
+
+                    $(this).find('.match').each(function() {
+                        let placar1 = $(this).find('.score').eq(0).text().trim();
+                        let placar2 = $(this).find('.score').eq(1).text().trim();
+                        let jogador1 = $(this).find('.label').eq(0).text().trim();
+                        let jogador2 = $(this).find('.label').eq(1).text().trim();
+
+                        resultados.push({
+                            rodada: rodadaAtual,
+                            jogador1: jogador1,
+                            jogador2: jogador2,
+                            placar1: placar1,
+                            placar2: placar2,
+                        });
+                    });
+                });
+
+                // Agrupar resultados por rodada
+                const resultadosPorRodada = {};
+                resultados.forEach(res => {
+                    if (!resultadosPorRodada[res.rodada]) {
+                        resultadosPorRodada[res.rodada] = [];
+                    }
+                    resultadosPorRodada[res.rodada].push(res);
+                });
+
+                // Preencher o formulário com os resultados agrupados
+                let resultsContainer = $('#resultsContainer');
+                resultsContainer.empty();
+
+            
+                
+
+                Object.keys(resultadosPorRodada).forEach(rodada => {
+                    resultsContainer.append(`<h5>Rodada ${rodada}</h5>`); // Adiciona o cabeçalho da rodada
+                    resultadosPorRodada[rodada].forEach(res => {
+                        resultsContainer.append(`
+                            <div class="match-result" 
+                            data-jogador1="${res.jogador1}" 
+                            data-jogador2="${res.jogador2}" 
+                            data-placar1="${res.placar1}" 
+                            data-placar2="${res.placar2}" 
+                            data-rodada="${res.rodada}">
+                            <strong>${res.jogador1}</strong> (${res.placar1}:${res.placar2}) <strong>${res.jogador2}</strong>
+                            </div>
+                        `);
+                    });
+                    // Adiciona uma linha em branco após a última partida da rodada
+                    resultsContainer.append('<div style="height: 12px;"></div>');
+
+                });
+
+                console.log('resultasContainer', resultsContainer)
+                console.log('resultados1', resultados)
+
+                $('#matchModal').modal('show'); // Mostra o modal
+            });
+
+            $(document).on('click', '#confirmResults', function() {
+                let resultados = [];
+                
+                $('.match-result').each(function() {
+                    const jogador1 = $(this).data('jogador1');
+                    const jogador2 = $(this).data('jogador2');
+                    const placar1 = $(this).data('placar1');
+                    const placar2 = $(this).data('placar2');
+                    const rodada = $(this).data('rodada');
+
+                    console.log(jogador1);
+                    console.log(jogador2);
+                    console.log(placar1);
+                    console.log(placar2);
+                    console.log(rodada)
+
+                    resultados.push({ jogador1, jogador2, placar1, placar2, rodada });
+                })
+                
+                $('#resultsContainer').empty(); // Limpa o container para não duplicar
+                resultados.forEach(res => {
+                    $('#resultsContainer').append(`
+                        <input type="hidden" name="resultados[]" value='${JSON.stringify(res)}'>
+                    `);
+                });
+
+                
+
+
+                $('#resultadosForm').submit();
+
+            })
+            $('#matchModal').modal('hide'); // Fecha o modal
+
+
+            
+
+
+            
+
+
+            
+
+
+
+
+
+
+
     
             function disableScoreEditing() {
                 $('.score.editable').each(function () {
@@ -205,4 +324,3 @@
     <script src="https://kit.fontawesome.com/eb67357ef4.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-

@@ -26,7 +26,11 @@ urlpatterns = [
     path('mudar_senha/', views.mudar_senha, name='mudar_senha'),
     path('troca_senha/', views.troca_senha, name='troca_senha'),
     path('validacao_otp/', views.validacao_otp, name='validacao_otp'),
-    path('suico/', views.suico, name='suico')
+    path('suico/', views.suico, name='suico'),
+
+    path('salvar_resultados/', views.salvar_resultados, name='salvar_resultados'),
+    path('check-tournament-exists/', views.check_tournament_exists, name='check_tournament_exists'),
+
 ]
 
 if settings.DEBUG:
